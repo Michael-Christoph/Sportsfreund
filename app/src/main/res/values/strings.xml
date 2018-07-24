@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Sportsfreund</string>
-    <string name="main_message">Aktivitäten in deiner Nähe:</string>
+    <string name="games_signd_in">Angemeldete Spiele</string>
+    <string name="games_nearby">Spiele in der Umgebung</string>
 </resources>
