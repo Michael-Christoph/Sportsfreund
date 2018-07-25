@@ -9,4 +9,5 @@
     <string name="find_place">Ort über GoogleMaps festlegen</string>
     <string name="label_game">Art des Spiels</string>
     <string name="label_time">Zeit</string>
+    <string name="place_game">Ort</string>
 </resources>

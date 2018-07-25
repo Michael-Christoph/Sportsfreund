@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:text="@string/find_place"
         android:id="@+id/button_find_place"
-        android:layout_below="@+id/input_time"
+        android:layout_below="@+id/input_label_place"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="16dp"
@@ -82,6 +82,19 @@
         android:text="@string/label_time"
         android:id="@+id/input_label_time"
         android:layout_below="@+id/input_game"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/place_game"
+        android:id="@+id/input_label_place"
+        android:layout_below="@+id/input_time"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:elegantTextHeight="false"
