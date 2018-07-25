@@ -1,16 +1,20 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     //ActionBar zum umschalten zwischen Teilgenommenen und Spielen in der Nähe
     ActionBar actionBar;
+    private Button newGameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +24,25 @@ public class MainActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
 
+        //Button für neues Spiel erstellen
+
+        newGameButton = (Button)findViewById(R.id.button_new_game);
+
+        newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeToNewGame();
+            }
+        });
     }
+
+    private void changeToNewGame() {
+
+        Intent i = new Intent(this, NewGame.class);
+
+        startActivity(i);
+    }
+
 
     //Instanziieren des Action menüs
     @Override
