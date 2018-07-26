@@ -1,5 +1,7 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openCreateGameActivity();
+                Toast.makeText(MainActivity.this,"test",Toast.LENGTH_SHORT).show();
             }
         });
 
