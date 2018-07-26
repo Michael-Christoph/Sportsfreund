@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    //Layout für ActionBar
+
+    <item
+        android:id="@+id/nearby"
+        android:title="In der Nähe"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_my_location_black_24dp">
+
+    </item>
+
+    <item
+        android:title="Angemeldet"
+        android:id="@+id/signedIn"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_person_black_24dp">
+
+    </item>
+
+</menu>

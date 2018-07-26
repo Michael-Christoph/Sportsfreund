@@ -5,4 +5,6 @@
     <string name="password">Password</string>
     <string name="registration_request">Bitte registriere dich, damit du dich mit anderen Sportsfreunden treffen kannst!</string>
     <string name="registration_button">Registrieren</string>
+    <string name="games_signd_in">Angemeldete Spiele</string>
+    <string name="games_nearby">Spiele in der Umgebung</string>
 </resources>
