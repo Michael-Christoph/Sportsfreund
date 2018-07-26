@@ -6,20 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-   <Button
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="@string/new_game"
-       android:id="@+id/button_new_game" />
-
-   <ScrollView
-       android:id="@+id/scrollView"
+   <ListView
+       android:id="@+id/listView"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-   </ScrollView>
+   </ListView>
 
-
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_game"
+        android:id="@+id/button_new_game" />
 
 </RelativeLayout>

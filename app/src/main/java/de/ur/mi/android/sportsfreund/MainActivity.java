@@ -8,6 +8,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     //ActionBar zum umschalten zwischen Teilgenommenen und Spielen in der Nähe
     ActionBar actionBar;
     private Button newGameButton;
+    String[] games = {"Game1","game2","game3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
+        sortByProximity();
+        populateList();
 
         //Button für neues Spiel erstellen
 
@@ -52,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //On selected Methode für MenuiTEMS
+    //On selected Methode für MenuItems
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,7 +92,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateList()  {
-        //Erzeugen des Listview
+
+        ListAdapter listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,games);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(listAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                openCreateGameActivity();
+            }
+        });
+
+
+
+    }
+
+    private void openCreateGameActivity()  {
+        Intent intent = new Intent(this, Stuff.class);
+        startActivity(intent);
     }
 
 }
