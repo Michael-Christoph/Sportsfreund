@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openCreateGameActivity()  {
-        Intent intent = new Intent(this, Stuff.class);
-        startActivity(intent);
+
     }
 
 }
