@@ -4,9 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewGame">
+    tools:context=".NewGame"
+    android:padding="16dp">
 
     <!--Quelle fürs Layout: Lösung zur Übungsaufgabe "LaufApp"-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_game"
+        android:id="@+id/input_label_game"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -23,6 +37,19 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/label_time"
+        android:id="@+id/input_label_time"
+        android:layout_below="@+id/input_game"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +64,19 @@
         android:layout_marginBottom="16dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/place_game"
+        android:id="@+id/input_label_place"
+        android:layout_below="@+id/input_time"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -61,45 +101,6 @@
         android:layout_marginBottom="16dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/label_game"
-        android:id="@+id/input_label_game"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/label_time"
-        android:id="@+id/input_label_time"
-        android:layout_below="@+id/input_game"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/place_game"
-        android:id="@+id/input_label_place"
-        android:layout_below="@+id/input_time"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
 
 
 </RelativeLayout>
