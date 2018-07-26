@@ -1,5 +1,4 @@
 package de.ur.mi.android.sportsfreund;
-import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
@@ -7,5 +6,5 @@ import android.arch.persistence.room.RoomDatabase;
 public abstract class GameDatabase extends RoomDatabase  {
 
 
-    public abstract Dao gameDao();
+    public abstract GameDao gameDao();
 }
