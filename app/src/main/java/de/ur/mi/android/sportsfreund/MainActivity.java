@@ -1,20 +1,19 @@
 package de.ur.mi.android.sportsfreund;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.view.View;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,17 +99,16 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openCreateGameActivity();
+                openSingleGameActivity();
+                Toast.makeText(MainActivity.this,"test",Toast.LENGTH_SHORT).show();
             }
         });
 
 
-
     }
 
-    private void openCreateGameActivity()  {
-        Intent intent = new Intent(this, Stuff.class);
-        startActivity(intent);
+    private void openSingleGameActivity() {
+
     }
 
 }

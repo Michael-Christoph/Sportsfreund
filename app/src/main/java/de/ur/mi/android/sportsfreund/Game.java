@@ -1,15 +1,18 @@
 package de.ur.mi.android.sportsfreund;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 
 @Entity(tableName = "games")
+
 public class Game {
 
     private String gameName;
     private String gameTime;
+
+    @PrimaryKey
+    private int key;
 
     public Game(String gameName, String gameTime){
         this.gameName = gameName;
@@ -22,5 +25,13 @@ public class Game {
     }
     public String getGameTime() {
         return gameTime;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 }
