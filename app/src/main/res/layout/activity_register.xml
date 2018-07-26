@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textview_registrationRequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/registration_request"
+        android:textSize="22sp"/>
+
+    <EditText
+        android:id="@+id/editText_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/textview_registrationRequest"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editText_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/editText_mail"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/password"
+        android:inputType="textEmailAddress" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/editText_password"
+        android:layout_centerHorizontal="true"
+        android:text="@string/registration_button"/>
+
+    <ProgressBar
+        android:id="@+id/register_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_button"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

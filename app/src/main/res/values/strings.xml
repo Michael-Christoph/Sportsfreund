@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Sportsfreund</string>
     <string name="main_message">Aktivitäten in deiner Nähe:</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="registration_request">Bitte registriere dich, damit du dich mit anderen Sportsfreunden treffen kannst!</string>
+    <string name="registration_button">Registrieren</string>
 </resources>
