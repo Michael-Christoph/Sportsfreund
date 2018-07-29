@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:fitsSystemWindows="true">
+
+
 
    <ListView
        android:id="@+id/listView"
        android:layout_width="match_parent"
-       android:layout_height="match_parent">
+       android:layout_height="match_parent"
+       android:layout_below="@+id/register_test_button">
 
    </ListView>
 
@@ -18,21 +22,20 @@
         android:layout_height="wrap_content"
         android:text="@string/new_game"
         android:id="@+id/button_new_game" />
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/main_message"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textSize="35sp"
-        />
+
     <Button
         android:id="@+id/register_test_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textview"
+        android:layout_below="@+id/button_new_game"
         android:text="Test registration"/>
 
-</RelativeLayout>
+ </RelativeLayout>
+
+
+
+
+
+
+
+

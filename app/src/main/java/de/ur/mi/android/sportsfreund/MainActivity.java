@@ -2,9 +2,6 @@ package de.ur.mi.android.sportsfreund;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -17,15 +14,6 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //bloss fuer MP zum Testen
-        Button testRegisterButton = findViewById(R.id.register_test_button);
+        /*Button testRegisterButton = findViewById(R.id.register_test_button);
         testRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        */
     }
 
     private void changeToNewGame() {
@@ -109,12 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void sortByProximity()  {
         // Sortieren der Spiele aus Firebase
-        TextView textView = findViewById(R.id.textview);
-
-
-
-
-
 
 
     }
@@ -125,7 +108,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateList()  {
 
-        ListAdapter listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,games);
+
+        //Erstellen eines beispiel Arrays
+        ListObject[] array = new ListObject[10];
+        for (int i = 0; i<10; i++)  {
+            ListObject object = new ListObject("Title"+i,"Body"+i);
+            array[i] = object;
+        }
+
+
+        ListAdapter listAdapter = new ItemAdapter(this,array);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
 
