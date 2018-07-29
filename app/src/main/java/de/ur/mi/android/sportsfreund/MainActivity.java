@@ -2,6 +2,8 @@ package de.ur.mi.android.sportsfreund;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,7 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //ActionBar zum umschalten zwischen Teilgenommenen und Spielen in der Nähe
     ActionBar actionBar;
@@ -27,21 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
         sortByProximity();
-        populateList();
+        //populateList();
 
         //Button für neues Spiel erstellen
 
-        newGameButton = (Button)findViewById(R.id.button_new_game);
 
-        newGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeToNewGame();
-            }
-        });
 
         //bloss fuer MP zum Testen
         /*Button testRegisterButton = findViewById(R.id.register_test_button);
@@ -136,4 +134,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id == R.id.acount) {
+            Toast.makeText(this, "account", Toast.LENGTH_SHORT).show();
+        }
+        if(id == R.id.newGame) {
+            changeToNewGame();
+        }
+        if(id == R.id.localGames) {
+            sortByProximity();
+            populateList();
+            Toast.makeText(this, "localGames", Toast.LENGTH_SHORT).show();
+        }
+        if(id == R.id.myGames) {
+            getSignedInGames();
+            populateList();
+            Toast.makeText(this, "myGames", Toast.LENGTH_SHORT).show();
+
+        }
+
+        return false;
+    }
 }
