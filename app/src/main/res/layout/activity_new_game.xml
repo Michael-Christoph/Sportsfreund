@@ -90,12 +90,25 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/no_ned"
+        android:id="@+id/location_set"
+        android:layout_below="@+id/button_find_place"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:elegantTextHeight="false"
+        android:textStyle="bold"
+        android:textAllCaps="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/make_new_game"
+        android:text="@string/find_place"
         android:id="@+id/button_make_new_game"
-        android:layout_below="@+id/button_find_place"
+        android:layout_below="@+id/location_set"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="16dp"
