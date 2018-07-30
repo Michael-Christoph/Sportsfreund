@@ -1,4 +1,4 @@
-package de.ur.mi.android.sportsfreund;
+/*package de.ur.mi.android.sportsfreund;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -21,3 +21,4 @@ public interface GameDao {
 
 
 }
+*/

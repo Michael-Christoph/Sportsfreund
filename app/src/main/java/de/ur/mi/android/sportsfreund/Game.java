@@ -1,4 +1,4 @@
-package de.ur.mi.android.sportsfreund;
+/*package de.ur.mi.android.sportsfreund;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
@@ -35,3 +35,4 @@ public class Game {
         this.key = key;
     }
 }
+*/

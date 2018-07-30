@@ -1,4 +1,4 @@
-package de.ur.mi.android.sportsfreund;
+/*package de.ur.mi.android.sportsfreund;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
@@ -8,3 +8,4 @@ public abstract class GameDatabase extends RoomDatabase  {
 
     public abstract GameDao gameDao();
 }
+*/
