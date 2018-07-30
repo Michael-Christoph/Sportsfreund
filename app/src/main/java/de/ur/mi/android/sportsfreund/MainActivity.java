@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
         sortByProximity();
-        //populateList();
+        populateList();
 
         //Button für neues Spiel erstellen
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Erstellen eines beispiel Arrays
         ListObject[] array = new ListObject[10];
         for (int i = 0; i<10; i++)  {
-            ListObject object = new ListObject("Title"+i,"Body"+i);
+            ListObject object = new ListObject("Spiel "+i,"Beschreibung "+i);
             array[i] = object;
         }
 
@@ -146,11 +146,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             changeToNewGame();
         }
         if(id == R.id.localGames) {
+            actionBar.setTitle(R.string.games_nearby);
             sortByProximity();
             populateList();
             Toast.makeText(this, "localGames", Toast.LENGTH_SHORT).show();
         }
         if(id == R.id.myGames) {
+            actionBar.setTitle(R.string.games_signd_in);
             getSignedInGames();
             populateList();
             Toast.makeText(this, "myGames", Toast.LENGTH_SHORT).show();
