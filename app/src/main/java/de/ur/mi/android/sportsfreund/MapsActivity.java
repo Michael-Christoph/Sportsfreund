@@ -1,18 +1,42 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static com.google.android.gms.maps.GoogleMap.*;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private final LatLng REGENSBURG = new LatLng(49, 12);
+    private LatLng newLocation;
+
+    final int REQUEST_CODE = 1;
+    private String titelAnleitung = "Anleitung";
+    private String textAnleitung = "Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen";
+    private String positiveButton = "OK";
+    private String textBestätigung = "Wollen sie diesen Ort als Treffpunkt übernehmen?";
+    private String markertitle = "Ort des Spiels";
+    public static final String KEY_LOCATION_LAT= "lKeyLat";
+    public static final String KEY_LOCATION_LONG = "lKeyLong";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
+    }
 
     /**
      * Manipulates the map once available.
@@ -37,10 +61,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        showInstructionDialog();
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(49, 12);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.addMarker(new MarkerOptions().position(REGENSBURG).title(markertitle).draggable(true));
+        mMap.setOnMarkerDragListener(new OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+
+                newLocation = marker.getPosition();
+                confirmLocation();
+
+
+
+            }
+        });
     }
+
+    private void goBackToNewGame() {
+
+            Intent result = new Intent(this, NewGame.class);
+
+            double locLong = newLocation.longitude;
+            double locLat = newLocation.latitude;
+
+            result.putExtra(KEY_LOCATION_LAT, locLat);
+            result.putExtra( KEY_LOCATION_LONG, locLong );
+
+
+            setResult(Activity.RESULT_OK, result );
+            finish();
+
+    }
+
+    private void showInstructionDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(titelAnleitung);
+        dialogBuilder.setMessage(textAnleitung);
+        dialogBuilder.setPositiveButton(positiveButton, new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+    private void confirmLocation() {
+
+            AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder(this);
+            dialogBuilder2.setTitle(titelAnleitung);
+            dialogBuilder2.setMessage(textBestätigung);
+            dialogBuilder2.setPositiveButton(positiveButton, new Dialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    goBackToNewGame();
+                }
+            });
+            AlertDialog dialog = dialogBuilder2.create();
+            dialog.show();
+        }
+
 }
+

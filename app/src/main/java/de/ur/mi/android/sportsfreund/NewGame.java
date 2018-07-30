@@ -1,13 +1,24 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.util.Log;
 
 public class NewGame extends AppCompatActivity {
     private Button mapButton;
+    private TextView locationSet;
+    final int REQUEST_CODE = 1;
+    private Location gameLocation;
+    private String noLocation= "no Location found";
+    public static final String KEY_LOCATION_LAT= "lKeyLat";
+    public static final String KEY_LOCATION_LONG = "lKeyLong";
 
 
     @Override
@@ -20,7 +31,13 @@ public class NewGame extends AppCompatActivity {
 
         setupMapButton();
 
+        setupTextView();
 
+
+    }
+
+    private void setupTextView() {
+        locationSet = findViewById( R.id.location_set );
     }
 
     private void setupMapButton(){
@@ -36,9 +53,22 @@ public class NewGame extends AppCompatActivity {
 
     private void changeToMapActivity() {
 
-        Intent i = new Intent(this, MapsActivity.class);
+        Intent getLocation = new Intent(this, MapsActivity.class);
 
-        startActivity(i);
+        startActivityForResult(getLocation,REQUEST_CODE);
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if(requestCode==REQUEST_CODE){
+        if(resultCode== Activity.RESULT_OK){
+
+           Bundle extras = data.getExtras();
+            double locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
+            double locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
+
+            locationSet.setText( Double.toString(locLat) );
+    }}}
+
+
     }
 
