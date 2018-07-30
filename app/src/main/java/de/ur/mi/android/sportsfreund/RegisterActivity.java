@@ -62,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
+                //var user = mAuth.createUserWithEmailAndPassword(email,password);
+
                 mAuth.createUserWithEmailAndPassword(email,password).
                         addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -79,6 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
             }
         });
 
