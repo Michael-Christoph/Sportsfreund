@@ -13,8 +13,6 @@ import android.widget.Toast;
 import android.util.Log;
 
 public class NewGame extends AppCompatActivity {
-    private Button mapButton;
-    private Button makeGameButton;
     private EditText inputGame;
     private EditText inputTime;
     private TextView locationSet;
@@ -44,7 +42,7 @@ public class NewGame extends AppCompatActivity {
     }
 
     private void setupCreateGameButton() {
-        makeGameButton = findViewById(R.id.button_make_new_game);
+        Button makeGameButton = findViewById(R.id.button_make_new_game);
         makeGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +67,7 @@ public class NewGame extends AppCompatActivity {
     }
 
     private void setupMapButton(){
-        mapButton = (Button)findViewById(R.id.button_find_place);
+        Button mapButton = (Button)findViewById(R.id.button_find_place);
 
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
