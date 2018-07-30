@@ -64,6 +64,7 @@ public class NewGame extends AppCompatActivity {
 
     private void setupTextView() {
         locationSet = findViewById( R.id.location_set );
+        locationSet.setText(getString(R.string.google_api_key));
     }
 
     private void setupMapButton(){

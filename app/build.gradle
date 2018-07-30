@@ -22,7 +22,7 @@ android {
 
 dependencies {
     //add after merge and error: java.lang.NoClassDefFoundError: com.google.android.gms.common.internal.zzbq
-    implementation 'com.android.support:multidex:1.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-media-compat:27.1.1'
@@ -31,7 +31,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     //war vorher 15.0.1; reduziert, weil's angeblich gleich mit firebase-Versionen sein muss
-    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     //folgende waren alle 11.8.0 vorher
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
@@ -39,7 +39,6 @@ dependencies {
     //war vorher 15.0.1; reduziert, weil's angeblich gleich mit firebase-Versionen sein muss
     implementation 'com.google.android.gms:play-services-base:15.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.2'
-    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     //implementation 'com.google.firebase:firebase-database:11.8.0'
     //implementation 'com.google.android.gms:play-services-base:11.8.0'
     //implementation 'com.google.firebase:firebase-auth:11.8.0'
