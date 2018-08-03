@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-class ItemAdapter extends ArrayAdapter<ListObject> {
+class ItemAdapter extends ArrayAdapter<Game> {
 
-    public ItemAdapter(Context context, ListObject[] item) {
+    public ItemAdapter(Context context, Game[] item) {
         super(context, R.layout.list_item,item);
     }
 
@@ -23,8 +23,8 @@ class ItemAdapter extends ArrayAdapter<ListObject> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View view = layoutInflater.inflate(R.layout.list_item,parent,false);
 
-        String title = getItem(position).getTitle();
-        String body = getItem(position).getBody();
+        String title = getItem(position).getGameName();
+        String body = getItem(position).getGameTime();
 
         TextView titleText = (TextView) view.findViewById(R.id.TitleText);
         TextView bodyText = (TextView)  view.findViewById(R.id.BodyText);

@@ -56,12 +56,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void changeToNewGame() {
 
         Intent i = new Intent(this, NewGame.class);
-
-
-
-
         startActivity(i);
     }
+
+    private void showGame(String title, String body)  {
+        Intent intent = new Intent(this,GameDetails.class);
+        intent.putExtra("title",title);
+        intent.putExtra("body",body);
+        startActivity(intent);
+    }
+
+
 
 
     //Instanziieren des Action menüs
@@ -108,10 +113,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //Erstellen eines beispiel Arrays
-        ListObject[] array = new ListObject[10];
+        final Game[] array = new Game[10];
         for (int i = 0; i<10; i++)  {
-            ListObject object = new ListObject("Spiel "+i,"Beschreibung "+i);
-            array[i] = object;
+            Game game = new Game("Spiel "+i,"Zeit "+i);
+            array[i] = game;
         }
 
 
@@ -122,17 +127,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openSingleGameActivity();
-                Toast.makeText(MainActivity.this,"test",Toast.LENGTH_SHORT).show();
+                Game game = array[position];
+                showGame(game.getGameName(),game.getGameTime());
+
             }
         });
 
 
     }
 
-    private void openSingleGameActivity() {
 
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
