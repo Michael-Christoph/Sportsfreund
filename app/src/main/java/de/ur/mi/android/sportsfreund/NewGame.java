@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class NewGame extends AppCompatActivity {
     private EditText inputGame;
@@ -21,6 +24,10 @@ public class NewGame extends AppCompatActivity {
     private String noLocation= "no Location found";
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
+
+    private String toastGameAdded = "Spiel wurde erstellt!";
+    private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
+            " versuche es später noch einmal!";
 
 
     @Override
@@ -56,10 +63,27 @@ public class NewGame extends AppCompatActivity {
     private void makeNewGame() {
         String gameName = inputGame.getText().toString();
         String gameTime = inputTime.getText().toString();
+        String gameLocation = locationSet.getText().toString();
 
-        Game game = new Game(gameName,gameTime);
-        new RealtimeSync().execute(game);
 
+        Game game = new Game(gameName,gameTime,gameLocation);
+        addGameToDatabase(game);
+        //RealtimeDbHandler.addGame(game);
+
+    }
+    private void addGameToDatabase(Game game){
+        DatabaseReference mDatabaseGames = FirebaseDatabase.getInstance().getReference("games");
+        String gameId = mDatabaseGames.push().getKey();
+        mDatabaseGames.child(gameId).setValue(game,new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                if (databaseError != null){
+                    Toast.makeText(getApplicationContext(),toastAddGameFailed,Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),toastGameAdded,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setupTextView() {
@@ -93,7 +117,7 @@ public class NewGame extends AppCompatActivity {
             double locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
             double locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
 
-            locationSet.setText( Double.toString(locLat) );
+            locationSet.setText( "Lat: " + Double.toString(locLat) + "; Long: " + Double.toString(locLong) );
     }}}
 
 

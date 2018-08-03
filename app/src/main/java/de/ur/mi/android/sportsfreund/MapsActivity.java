@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -37,6 +39,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String markertitle = "Ort des Spiels";
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
+
+    public static final String KEY_LOCATION = "location";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Intent result = new Intent(this, NewGame.class);
 
+
             double locLong = newLocation.longitude;
             double locLat = newLocation.latitude;
 
@@ -99,6 +105,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             result.putExtra( KEY_LOCATION_LONG, locLong );
 
 
+            /*
+            // dummy:
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location dummyLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            result.putExtra(KEY_LOCATION,new Location)
+            */
             setResult(Activity.RESULT_OK, result );
             finish();
 

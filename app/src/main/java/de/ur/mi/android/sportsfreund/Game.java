@@ -10,13 +10,19 @@ public class Game {
 
     private String gameName;
     private String gameTime;
+    private String gameLocation;
 
-    @PrimaryKey
-    private int key;
+    // Default constructor required for calls to
+    // DataSnapshot.getValue(User.class)
+    //cf. https://www.androidhive.info/2016/10/android-working-with-firebase-realtime-database/
+    public Game(){
 
-    public Game(String gameName, String gameTime){
+    }
+
+    public Game(String gameName, String gameTime, String gameLocation){
         this.gameName = gameName;
         this.gameTime= gameTime;
+        this.gameLocation = gameLocation;
 
     }
 
@@ -26,13 +32,7 @@ public class Game {
     public String getGameTime() {
         return gameTime;
     }
+    public String getGameLocation(){return gameLocation;}
 
-    public int getKey() {
-        return key;
-    }
-
-    public void setKey(int key) {
-        this.key = key;
-    }
 }
 
