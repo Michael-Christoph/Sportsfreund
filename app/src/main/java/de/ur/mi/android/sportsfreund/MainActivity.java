@@ -168,7 +168,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Collections.sort(gamesInDatabase, new Comparator<Game>() {
             @Override
             public int compare(Game game, Game t1) {
-                return game.getGameLocation().compareTo(t1.getGameLocation());
+                double proximityGame = game.getProximity(NavigationHelperDummy.getLastKnownLocation());
+                Log.d("bla","proxmityGame: " + proximityGame);
+                double proximityt1 = t1.getProximity(NavigationHelperDummy.getLastKnownLocation());
+                Log.d("bla","proximityt1: " + proximityt1);
+                int comparisonResult = Double.compare(proximityGame,proximityt1);
+                Log.d("bla","comparisonResult: " + comparisonResult);
+                return comparisonResult;
             }
         });
         gamesForCurrentView = gamesInDatabase;

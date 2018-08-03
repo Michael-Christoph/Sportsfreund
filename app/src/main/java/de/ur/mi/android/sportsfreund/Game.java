@@ -2,6 +2,10 @@ package de.ur.mi.android.sportsfreund;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Entity(tableName = "games")
@@ -33,6 +37,12 @@ public class Game {
         return gameTime;
     }
     public String getGameLocation(){return gameLocation;}
+
+    //nur ein Platzhalter für Max' Methode
+    public double getProximity(int lastKnownLocation){
+        String firstLatDigits = gameLocation.substring(5,20);
+        return Double.parseDouble(firstLatDigits)-lastKnownLocation;
+    }
 
 }
 
