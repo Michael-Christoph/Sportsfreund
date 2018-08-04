@@ -7,21 +7,23 @@ import android.util.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Game {
+public class Game implements Serializable{
 
     private String gameName;
     private String gameTime;
     private String gameLocation;
+    private String gameDate;
 
     //@JsonIgnore
     private String key;
 
 
 
-    ArrayList<String> participants = new ArrayList<>();
+    private ArrayList<String> participants = new ArrayList<>();
 
     // Default constructor required by Jackson/GSON for calls to
     // DataSnapshot.getValue(User.class)
@@ -35,6 +37,8 @@ public class Game {
         this.gameTime= gameTime;
         this.gameLocation = gameLocation;
         participants.add(uid);
+        gameDate = "dummyDate";
+
 
     }
 
@@ -73,6 +77,13 @@ public class Game {
         this.gameLocation = updatedGame.gameLocation;
         this.gameName = updatedGame.gameName;
         this.gameTime = updatedGame.gameTime;
+    }
+    public String getDate() {
+        return gameDate;
+    }
+
+    public void setDate(String date) {
+        this.gameDate = date;
     }
 }
 

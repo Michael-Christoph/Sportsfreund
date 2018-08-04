@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("bla","onItemClick funktioniert");
                 Game game = itemAdapter.getItem(position);
-                showGame(game.getGameName(),game.getGameTime());
+                showGame(game);
             }
         });
     }
@@ -159,10 +159,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(i);
     }
 
-    private void showGame(String title, String body)  {
+    private void showGame(Game game)  {
         Intent intent = new Intent(this,GameDetails.class);
-        intent.putExtra("title",title);
-        intent.putExtra("body",body);
+        intent.putExtra("serializable",game);
+        //intent.putExtra("title",title);
+        //intent.putExtra("body",body);
         startActivity(intent);
     }
 
@@ -291,5 +292,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public static boolean allGamesIsCurrentView() {
         return allGamesIsCurrentView;
+    }
+    public static void setAllGamesIsCurrentView(boolean allGamesIsCurrentView) {
+        MainActivity.allGamesIsCurrentView = allGamesIsCurrentView;
     }
 }

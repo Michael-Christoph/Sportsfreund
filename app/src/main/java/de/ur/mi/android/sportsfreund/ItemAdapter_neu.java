@@ -131,6 +131,10 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         game.addParticipant(participantId);
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
+    public void removeParticipantFromGame(Game game, String participantId){
+        game.removeParticipant(participantId);
+        firebaseGameRef.child(game.getKey()).setValue(game);
+    }
     private void sortGamesAccordingToActionBar() {
         if (MainActivity.allGamesIsCurrentView()){
             sortGamesFromDatabaseByProximity();
