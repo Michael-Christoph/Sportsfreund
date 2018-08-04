@@ -158,6 +158,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(i);
     }
 
+    private void showGame(String title, String body)  {
+        Intent intent = new Intent(this,GameDetails.class);
+        intent.putExtra("title",title);
+        intent.putExtra("body",body);
+        startActivity(intent);
+    }
+
+
+
 
     //Instanziieren des Action menüs
     @Override
@@ -209,11 +218,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void filterSignedInGamesAndSortByTime()  {
+    private void populateList()  {
 
+
+        //Erstellen eines beispiel Arrays
+        ListObject[] array = new ListObject[10];
+        for (int i = 0; i<10; i++)  {
+            ListObject object = new ListObject("Spiel "+i,"Beschreibung "+i);
+            array[i] = object;
+        }
+
+
+        ListAdapter listAdapter = new ItemAdapter(this,array);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(listAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Game game = array[position];
+                showGame(game.getGameName(),game.getGameTime());
+
+            }
+        });
+        gamesForCurrentView = gamesInDatabase;
+        itemAdapter.clear();
+        for (Game game: gamesForCurrentView){
+            itemAdapter.add(game);
+        }
     }
 
-    private void openSingleGameActivity() {
+    private void filterSignedInGamesAndSortByTime()  {
 
     }
 
