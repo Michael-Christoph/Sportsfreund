@@ -35,6 +35,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         this.gamesForCurrentView = gamesForCurrentView;
         gamesInDatabase = new ArrayList<>();
         firebaseGameRef = FirebaseDatabase.getInstance().getReference().child("games");
+        //MP: adds offline persistence even if app is destroyed.
+        firebaseGameRef.keepSynced(true);
         firebaseGameRef.addChildEventListener(new GamesChildEventListener());
 
     }
@@ -51,7 +53,14 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+            String key = dataSnapshot.getKey();
+            Game updatedGame = dataSnapshot.getValue(Game.class);
+            for (Game game: gamesForCurrentView){
+                if (game.getKey().equals(key)){
+                    game.setValues(updatedGame);
+                    notifyDataSetChanged();
+                }
+            }
         }
 
         @Override
@@ -73,7 +82,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            Log.e("bla","Database error: " + databaseError);
         }
     }
 
@@ -98,8 +107,15 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         return view;
     }
+    public void add(Game game){
+        firebaseGameRef.push().setValue(game);
+    }
     public void remove(Game game){
         firebaseGameRef.child(game.getKey()).removeValue();
+    }
+    public void addParticipantToGame(Game game, String participantId){
+        game.addParticipant(participantId);
+        firebaseGameRef.child(game.getKey()).setValue(game);
     }
     private void sortGamesAccordingToActionBar() {
         if (MainActivity.allGamesIsCurrentView()){
@@ -126,8 +142,5 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     }
     private void filterSignedInGamesAndSortByTime()  {
 
-    }
-    public void add(Game game){
-        firebaseGameRef.push().setValue(game);
     }
 }

@@ -45,9 +45,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("MainActivity","entered onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //MP: adds offline persistence even if app is destroyed.
+        if (savedInstanceState == null){
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);

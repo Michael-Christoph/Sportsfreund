@@ -69,5 +69,10 @@ public class Game {
         this.key = key;
     }
 
+    public void setValues(Game updatedGame) {
+        this.gameLocation = updatedGame.gameLocation;
+        this.gameName = updatedGame.gameName;
+        this.gameTime = updatedGame.gameTime;
+    }
 }
 
