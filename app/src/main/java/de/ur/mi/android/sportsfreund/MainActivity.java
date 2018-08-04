@@ -3,6 +3,7 @@ package de.ur.mi.android.sportsfreund;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +31,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //ActionBar zum umschalten zwischen Teilgenommenen und Spielen in der Nähe
     ActionBar actionBar;
-    boolean allGamesIsCurrentView = true;
+
+    private static boolean allGamesIsCurrentView = true;
     private Button newGameButton;
     ArrayList<Game> gamesForCurrentView = new ArrayList<>();
     ArrayList<Game> gamesInDatabase = new ArrayList<>();
-    ItemAdapter_neu itemAdapter;
+
+
+
+    private static ItemAdapter_neu itemAdapter;
     ListView listView;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +57,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //getGamesFromDatabase_dummy();
         setupAdapterAndListView();
-        getGamesFromDatabase();
+        //getGamesFromDatabase();
 
         sortGamesFromDatabaseByProximity();
 
 
+        //nur fuer MP zum Testen
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemAdapter.add(new Game("test","test","Lat: 42.424242424242424","test"));
+            }
+        });
 
         //Button für neues Spiel erstellen
 
@@ -88,12 +102,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getGamesFromDatabase_dummy() {
-        Game game1 = new Game("Testgame1","Testtime1","Testlocation1");
-        Game game2 = new Game("Testgame2","Testtime2","Testlocation2");
+        Game game1 = new Game("Testgame1","Testtime1","Testlocation1","egalid");
+        Game game2 = new Game("Testgame2","Testtime2","Testlocation2","egalid2");
         gamesForCurrentView.add(game1);
         gamesForCurrentView.add(game2);
     }
 
+    /*
     private void getGamesFromDatabase(){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("games").addValueEventListener(new ValueEventListener() {
@@ -118,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+    */
 
     private void renewViewAccordingToActionBar() {
         if (allGamesIsCurrentView){
@@ -216,5 +232,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return false;
+    }
+    public static ItemAdapter_neu getItemAdapter() {
+        return itemAdapter;
+    }
+    public static boolean allGamesIsCurrentView() {
+        return allGamesIsCurrentView;
     }
 }

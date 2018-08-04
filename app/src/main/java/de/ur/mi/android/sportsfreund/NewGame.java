@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,11 +32,17 @@ public class NewGame extends AppCompatActivity {
     private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
             " versuche es später noch einmal!";
 
+    private ItemAdapter_neu itemAdapter;
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
+        mAuth = FirebaseAuth.getInstance();
 
         // back-button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -44,8 +53,14 @@ public class NewGame extends AppCompatActivity {
         setupMapButton();
         setupCreateGameButton();
         setupTextView();
+        itemAdapter = MainActivity.getItemAdapter();
 
 
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        //currentUser = mAuth.getCurrentUser();
     }
 
     private void setupCreateGameButton() {
@@ -66,9 +81,12 @@ public class NewGame extends AppCompatActivity {
         String gameLocation = locationSet.getText().toString();
 
 
-        Game game = new Game(gameName,gameTime,gameLocation);
-        addGameToDatabase(game);
-        //RealtimeDbHandler.addGame(game);
+        //Game game = new Game(gameName,gameTime,gameLocation,currentUser.getUid());
+        Game game = new Game(gameName,gameTime,gameLocation,"testid");
+
+        //addGameToDatabase(game);
+        itemAdapter.add(game);
+        //RealtimeDbAdapter.addGame(game);
 
     }
     private void addGameToDatabase(Game game){
