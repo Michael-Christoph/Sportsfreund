@@ -3,25 +3,24 @@ package de.ur.mi.android.sportsfreund;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.util.Log;
 
 public class NewGame extends AppCompatActivity {
     private EditText inputGame;
     private EditText inputTime;
-    private TextView locationSet;
+    Button makeGameButton;
     final int REQUEST_CODE = 1;
     private Location gameLocation;
     private String noLocation= "no Location found";
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
+    double locLat;
+    double locLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +35,13 @@ public class NewGame extends AppCompatActivity {
 
         setupMapButton();
         setupCreateGameButton();
-        setupTextView();
 
 
     }
 
     private void setupCreateGameButton() {
-        Button makeGameButton = findViewById(R.id.button_make_new_game);
+            makeGameButton = findViewById(R.id.button_make_new_game);
+            makeGameButton.setEnabled( false );
         makeGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,16 +55,14 @@ public class NewGame extends AppCompatActivity {
     private void makeNewGame() {
         String gameName = inputGame.getText().toString();
         String gameTime = inputTime.getText().toString();
+        double gameLat = locLat;
+        double gameLong = locLong;
 
-        Game game = new Game(gameName,gameTime);
+        Game game = new Game(gameName,gameTime, gameLat, gameLong);
         new RealtimeSync().execute(game);
 
     }
 
-    private void setupTextView() {
-        locationSet = findViewById( R.id.location_set );
-        locationSet.setText(getString(R.string.google_api_key));
-    }
 
     private void setupMapButton(){
         Button mapButton = (Button)findViewById(R.id.button_find_place);
@@ -90,10 +87,10 @@ public class NewGame extends AppCompatActivity {
         if(resultCode== Activity.RESULT_OK){
 
            Bundle extras = data.getExtras();
-            double locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
-            double locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
+            locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
+            locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
 
-            locationSet.setText( Double.toString(locLat) );
+            makeGameButton.setEnabled( true );
     }}}
 
 
