@@ -104,8 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openSingleGameActivity();
-                Toast.makeText(MainActivity.this,"test",Toast.LENGTH_SHORT).show();
+                Log.d("bla","onItemClick funktioniert");
+                Game game = itemAdapter.getItem(position);
+                showGame(game.getGameName(),game.getGameTime());
             }
         });
     }
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
     private void populateList()  {
 
 
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             itemAdapter.add(game);
         }
     }
+    */
 
     private void filterSignedInGamesAndSortByTime()  {
 
