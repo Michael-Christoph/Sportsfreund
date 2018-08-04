@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<Game> gamesForCurrentView = new ArrayList<>();
     ArrayList<Game> gamesInDatabase = new ArrayList<>();
 
+    private FirebaseAuth auth;
+
 
 
     private static ItemAdapter_neu itemAdapter;
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        auth = FirebaseAuth.getInstance();
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
@@ -217,7 +223,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.acount) {
-            Toast.makeText(this, "account", Toast.LENGTH_SHORT).show();
+            FirebaseUser user = auth.getCurrentUser();
+            if (user != null){
+                startActivity(new Intent(MainActivity.this,AccountActivity.class));
+            } else {
+                startActivity(new Intent(MainActivity.this,SignUpActivity.class));
+            }
+
         }
         if(id == R.id.newGame) {
             changeToNewGame();

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,10 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     private ArrayList<Game> gamesInDatabase;
     private ArrayList<Game> gamesForCurrentView;
     private DatabaseReference firebaseGameRef;
+
+    private String toastGameAdded = "Spiel wurde erstellt!";
+    private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
+            " versuche es später noch einmal!";
 
     public ItemAdapter_neu(Context context,ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
@@ -107,8 +112,17 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         return view;
     }
-    public void add(Game game){
-        firebaseGameRef.push().setValue(game);
+    public void add(Game game, final Context context){
+        firebaseGameRef.push().setValue(game,new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                if (databaseError != null){
+                    Toast.makeText(context,toastAddGameFailed,Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context,toastGameAdded,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
     public void remove(Game game){
         firebaseGameRef.child(game.getKey()).removeValue();

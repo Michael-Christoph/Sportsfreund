@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class NewGame extends AppCompatActivity {
     private EditText inputGame;
@@ -28,9 +24,7 @@ public class NewGame extends AppCompatActivity {
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
-    private String toastGameAdded = "Spiel wurde erstellt!";
-    private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
-            " versuche es später noch einmal!";
+
 
     private ItemAdapter_neu itemAdapter;
 
@@ -43,6 +37,9 @@ public class NewGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
         mAuth = FirebaseAuth.getInstance();
+
+        currentUser = mAuth.getCurrentUser();
+        Log.d("bla","currentUser: " +currentUser);
 
         // back-button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,7 +57,7 @@ public class NewGame extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        //currentUser = mAuth.getCurrentUser();
+
     }
 
     private void setupCreateGameButton() {
@@ -76,19 +73,25 @@ public class NewGame extends AppCompatActivity {
 
 
     private void makeNewGame() {
-        String gameName = inputGame.getText().toString();
-        String gameTime = inputTime.getText().toString();
-        String gameLocation = locationSet.getText().toString();
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null){
+            Intent i = new Intent(this,SignUpActivity.class);
+            startActivity(i);
+        } else {
+            String gameName = inputGame.getText().toString();
+            String gameTime = inputTime.getText().toString();
+            String gameLocation = locationSet.getText().toString();
 
 
-        //Game game = new Game(gameName,gameTime,gameLocation,currentUser.getUid());
-        Game game = new Game(gameName,gameTime,gameLocation,"testid");
+            Game game = new Game(gameName,gameTime,gameLocation,currentUser.getUid());
+            //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
-        //addGameToDatabase(game);
-        itemAdapter.add(game);
-        //RealtimeDbAdapter.addGame(game);
-
+            //addGameToDatabase(game);
+            itemAdapter.add(game, this);
+            //RealtimeDbAdapter.addGame(game);
+        }
     }
+    /*
     private void addGameToDatabase(Game game){
         DatabaseReference mDatabaseGames = FirebaseDatabase.getInstance().getReference("games");
         String gameId = mDatabaseGames.push().getKey();
@@ -103,10 +106,11 @@ public class NewGame extends AppCompatActivity {
             }
         });
     }
+    */
 
     private void setupTextView() {
         locationSet = findViewById( R.id.location_set );
-        locationSet.setText(getString(R.string.google_api_key));
+        locationSet.setText("Lat: 42.424242424242424");
     }
 
     private void setupMapButton(){

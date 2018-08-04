@@ -106,7 +106,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/find_place"
+        android:text="@string/make_new_game"
         android:id="@+id/button_make_new_game"
         android:layout_below="@+id/location_set"
         android:layout_alignParentLeft="true"
