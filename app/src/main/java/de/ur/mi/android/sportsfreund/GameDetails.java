@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,7 +27,6 @@ public class GameDetails extends AppCompatActivity  {
     private Game game;
 
     FirebaseAuth auth;
-    FirebaseAuth.AuthStateListener authListener;
 
 
     @Override
@@ -76,41 +76,56 @@ public class GameDetails extends AppCompatActivity  {
     }
     private void setupParticipateAndResignButtons(){
         participate = findViewById(R.id.button_participate);
-        /*
+
         participate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseUser user = auth.getCurrentUser();
                 if (user == null){
+                    Log.d("bla","participate clicked, no user found ");
                     startActivity(new Intent(GameDetails.this,SignUpActivity.class));
                 } else {
-                    itemAdapter.addParticipantToGame(game,user.getUid());
-                    MainActivity.setAllGamesIsCurrentView(false);
-                    startActivity(new Intent(GameDetails.this,MainActivity.class));
+                    if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
+                        Log.d("bla","participate-onClick-else-if: should never get to this place");
+                    } else {
+                        itemAdapter.addParticipantToGame(game,user.getUid(), getApplicationContext());
+                        Log.d("bla","participate clicked, user found, id: " + user.getUid());
+                        participate.setEnabled(false);
+                        MainActivity.setAllGamesIsCurrentView(false);
+                        startActivity(new Intent(GameDetails.this,MainActivity.class));
+                    }
                 }
             }
         });
-        */
+
         resign = findViewById(R.id.button_resign);
-        /*
+
         resign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseUser user = auth.getCurrentUser();
                 if (user == null){
+                    Log.d("bla","resign clicked, no user found");
                     startActivity(new Intent(GameDetails.this,SignUpActivity.class));
                 } else {
-                    itemAdapter.removeParticipantFromGame(game,user.getUid());
-                    MainActivity.setAllGamesIsCurrentView(false);
-                    startActivity(new Intent(GameDetails.this,MainActivity.class));
+                    if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
+                        itemAdapter.removeParticipantFromGame(game,user.getUid(), getApplicationContext());
+                        Log.d("bla","resign clicked, user found, id: " + user.getUid());
+                        resign.setEnabled(false);
+                        MainActivity.setAllGamesIsCurrentView(false);
+                        startActivity(new Intent(GameDetails.this,MainActivity.class));
+                    } else {
+                        Log.d("bla","should never get to this place");
+                    }
+
                 }
             }
         });
-        */
 
-        authListener = new FirebaseAuth.AuthStateListener() {
+        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d("GameDetails","entered onAuthStateChanged!");
                 if (auth.getCurrentUser() != null){
                     //if user has already signed up for this game
                     if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
@@ -124,6 +139,6 @@ public class GameDetails extends AppCompatActivity  {
                     resign.setEnabled(true);
                 }
             }
-        };
+        });
     }
 }

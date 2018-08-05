@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+//cf. http://www.rosebotics.org/android-firebase-v3/unit?unit=1&lesson=13 lecture series
+// introducing firebase realtime database
 public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
     private ArrayList<Game> gamesInDatabase;
@@ -127,12 +129,12 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     public void remove(Game game){
         firebaseGameRef.child(game.getKey()).removeValue();
     }
-    public void addParticipantToGame(Game game, String participantId){
-        game.addParticipant(participantId);
+    public void addParticipantToGame(Game game, String participantId, Context context){
+        game.addParticipant(participantId, context);
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
-    public void removeParticipantFromGame(Game game, String participantId){
-        game.removeParticipant(participantId);
+    public void removeParticipantFromGame(Game game, String participantId, Context context){
+        game.removeParticipant(participantId, context);
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
     private void sortGamesAccordingToActionBar() {

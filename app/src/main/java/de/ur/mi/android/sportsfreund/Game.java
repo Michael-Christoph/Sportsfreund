@@ -2,7 +2,9 @@ package de.ur.mi.android.sportsfreund;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.Exclude;
@@ -57,11 +59,19 @@ public class Game implements Serializable{
         String firstLatDigits = gameLocation.substring(5,20);
         return Double.parseDouble(firstLatDigits)-lastKnownLocation;
     }
-    public void addParticipant(String uid){
-        participants.add(uid);
+    public void addParticipant(String uid, Context context){
+        if (participants.contains(uid)){
+            Toast.makeText(context,R.string.participant_already_added,Toast.LENGTH_LONG).show();
+        } else {
+            participants.add(uid);
+        }
     }
-    public void removeParticipant(String uid){
-        participants.remove(uid);
+    public void removeParticipant(String uid, Context context){
+        if (participants.contains(uid)){
+            participants.remove(uid);
+        } else {
+            Toast.makeText(context,R.string.participant_not_there,Toast.LENGTH_LONG).show();
+        }
     }
 
     @Exclude

@@ -37,4 +37,6 @@
     <string name="participants">Teilnehmer:</string>
     <string name="button_participate">mich als Teilnehmer hinzufügen</string>
     <string name="button_resign">mich als Teilnehmer entfernen</string>
+    <string name="participant_already_added">Du bist bereits für das Spiel angemeldet!</string>
+    <string name="participant_not_there">Nicht möglich, denn du bist gar nicht für das Spiel angemeldet!</string>
 </resources>

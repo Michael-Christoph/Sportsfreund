@@ -30,9 +30,6 @@
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add" />
-
-
-
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView

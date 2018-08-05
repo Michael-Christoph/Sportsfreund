@@ -32,10 +32,6 @@ public class RealtimeDbAdapter {
 
         return addedSuccessfully;
     }
-    public void addParticipantToGame(Game game, String participantId){
-        game.addParticipant(participantId);
-        //mDatabaseGamesRef.child(game.getK)
-    }
     /*
     private static void showCommitFailedDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder();
