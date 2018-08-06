@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Game game = new Game(getApplicationContext(),"Testspiel","23:59",42.424242424242424,22.424242424242424,"Testid");
+                Game game = new Game(getApplicationContext(),"Testspiel","06.08.2018","23:59",42.424242424242424,22.424242424242424,"Testid");
                 itemAdapter.add(game,MainActivity.this);
             }
         });

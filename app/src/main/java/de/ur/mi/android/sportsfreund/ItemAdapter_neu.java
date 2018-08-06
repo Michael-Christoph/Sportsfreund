@@ -56,8 +56,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         Game gameToView = getItem(position);
         String title = gameToView.getGameName();
-        String body = "Zeit: " + gameToView.getGameTime();
-        String body2 = "Ort: " + gameToView.getGameLat();
+        String body = "Zeit: " + gameToView.getDate() + ", " + gameToView.getGameTime() + " Uhr";
+        String body2 = "Entfernung: " + gameToView.distanceToGame(getContext()) + " Meter";
 
         TextView titleText = (TextView) view.findViewById(R.id.TitleText);
         TextView bodyText = (TextView) view.findViewById(R.id.BodyText);

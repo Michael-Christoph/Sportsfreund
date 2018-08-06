@@ -54,9 +54,9 @@ public class Game implements Parcelable{
 
     }
 
-    public Game(Context context, String gameName, String gameTime, double gameLat, double gameLong, String uid) {
+    public Game(Context context, String gameName,String gameDate, String gameTime, double gameLat, double gameLong, String uid) {
         this.gameName = gameName;
-        gameDate = "dummyDate";
+        this.gameDate = gameDate;
         this.gameTime = gameTime;
         this.gameLat = gameLat;
         this.gameLong = gameLong;
@@ -74,8 +74,8 @@ public class Game implements Parcelable{
         Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );
         gameLocation.setLatitude(gameLat);
         gameLocation.setLongitude(gameLong);
-
-        return lastKnownLocation.distanceTo(gameLocation);
+        float distance = lastKnownLocation.distanceTo(gameLocation);
+        return distance;
     }
     public String getGameName(){
         return gameName;
@@ -131,7 +131,7 @@ public class Game implements Parcelable{
         this.gameLat = updatedGame.gameLat;
         this.gameLong = updatedGame.gameLong;
         this.participants = updatedGame.participants;
-        this.key = updatedGame.key;
+        //this.key = updatedGame.key;
     }
     public String getDate() {
         return gameDate;

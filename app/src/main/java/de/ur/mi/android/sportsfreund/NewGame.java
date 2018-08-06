@@ -13,14 +13,13 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class NewGame extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private EditText inputGame;
+    private EditText inputDate;
     private EditText inputTime;
     Button makeGameButton;
     private TextView locationSet;
@@ -52,7 +51,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         // back-button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        inputGame = findViewById(R.id.input_game);
+        inputGame = findViewById(R.id.input_name);
+        inputDate = findViewById(R.id.input_date);
         inputTime = findViewById(R.id.input_time);
 
         setupMapButton();
@@ -89,10 +89,10 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             startActivity(i);
         } else {
             String gameName = inputGame.getText().toString();
+            String gameDate = inputDate.getText().toString();
             String gameTime = inputTime.getText().toString();
-            gameLocation = NavigationController.getInstance(getApplicationContext()).returnLastKnownLocation();
 
-            Game game = new Game(getApplicationContext(),gameName,gameTime,gameLocation.getLatitude(),gameLocation.getLongitude(),currentUser.getUid());
+            Game game = new Game(getApplicationContext(),gameName,gameDate,gameTime,locLat,locLong,currentUser.getUid());
             //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
             //addGameToDatabase(game);
@@ -164,6 +164,10 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
 
             makeGameButton.setEnabled( true );
+            if (locLat != 0){
+                Log.d("NewGame","LocLat: " + locLat);
+                Log.d("NewGame", "LocLong" + locLong);
+            }
     }}}
 
 
