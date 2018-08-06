@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemAdapter.add(new Game("test","test","Lat: 42.424242424242424","test"));
+                Game game = new Game(getApplicationContext(),"Testspiel","23:59",42.424242424242424,22.424242424242424,"Testid");
+                itemAdapter.add(game,MainActivity.this);
             }
         });
     }
@@ -89,12 +90,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    /*
     private void getGamesFromDatabase_dummy() {
         Game game1 = new Game("Testgame1","Testtime1","Testlocation1","egalid");
         Game game2 = new Game("Testgame2","Testtime2","Testlocation2","egalid2");
         gamesForCurrentView.add(game1);
         gamesForCurrentView.add(game2);
     }
+    */
 
     /*
     private void getGamesFromDatabase(){
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showGame(Game game)  {
         Intent intent = new Intent(this,GameDetails.class);
-        intent.putExtra("serializable",game);
+        intent.putExtra("game",game);
         //intent.putExtra("title",title);
         //intent.putExtra("body",body);
         startActivity(intent);
@@ -182,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Collections.sort(gamesInDatabase, new Comparator<Game>() {
             @Override
             public int compare(Game game, Game t1) {
-                double proximityGame = game.getProximity(NavigationHelperDummy.getLastKnownLocation());
+                double proximityGame = game.distanceToGame(getApplicationContext());
                 Log.d("bla","proxmityGame: " + proximityGame);
-                double proximityt1 = t1.getProximity(NavigationHelperDummy.getLastKnownLocation());
+                double proximityt1 = t1.distanceToGame(getApplicationContext());
                 Log.d("bla","proximityt1: " + proximityt1);
                 int comparisonResult = Double.compare(proximityGame,proximityt1);
                 Log.d("bla","comparisonResult: " + comparisonResult);

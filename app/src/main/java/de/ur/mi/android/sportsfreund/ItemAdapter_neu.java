@@ -34,11 +34,11 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
             " versuche es später noch einmal!";
 
-    public ItemAdapter_neu(Context context,ArrayList<Game> gamesForCurrentView) {
+    public ItemAdapter_neu(Context context, ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
         //super(context,0,items);
 
-        super(context,0,gamesForCurrentView);
+        super(context, 0, gamesForCurrentView);
         this.gamesForCurrentView = gamesForCurrentView;
         gamesInDatabase = new ArrayList<>();
         firebaseGameRef = FirebaseDatabase.getInstance().getReference().child("games");
@@ -47,13 +47,37 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         firebaseGameRef.addChildEventListener(new GamesChildEventListener());
 
     }
-    class GamesChildEventListener implements ChildEventListener{
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View view = layoutInflater.inflate(R.layout.list_item, parent, false);
+
+        Game gameToView = getItem(position);
+        String title = gameToView.getGameName();
+        String body = "Zeit: " + gameToView.getGameTime();
+        String body2 = "Ort: " + gameToView.getGameLat();
+
+        TextView titleText = (TextView) view.findViewById(R.id.TitleText);
+        TextView bodyText = (TextView) view.findViewById(R.id.BodyText);
+        TextView body2Text = (TextView) view.findViewById(R.id.body_2_text);
+
+        titleText.setText(title);
+        bodyText.setText(body);
+        body2Text.setText(body2);
+
+
+        return view;
+    }
+
+    class GamesChildEventListener implements ChildEventListener {
 
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             Game game = dataSnapshot.getValue(Game.class);
             game.setKey(dataSnapshot.getKey());
-            gamesForCurrentView.add(0,game);
+            gamesForCurrentView.add(0, game);
             sortGamesAccordingToActionBar();
             notifyDataSetChanged();
         }
@@ -62,8 +86,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String key = dataSnapshot.getKey();
             Game updatedGame = dataSnapshot.getValue(Game.class);
-            for (Game game: gamesForCurrentView){
-                if (game.getKey().equals(key)){
+            for (Game game : gamesForCurrentView) {
+                if (game.getKey().equals(key)) {
                     game.setValues(updatedGame);
                     notifyDataSetChanged();
                 }
@@ -73,8 +97,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
-            for (Game game: gamesForCurrentView){
-                if (game.getKey().equals(key)){
+            for (Game game : gamesForCurrentView) {
+                if (game.getKey().equals(key)) {
                     gamesForCurrentView.remove(game);
                     notifyDataSetChanged();
                     return;
@@ -89,78 +113,68 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("bla","Database error: " + databaseError);
+            Log.e("bla", "Database error: " + databaseError);
         }
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View view = layoutInflater.inflate(R.layout.list_item,parent,false);
-
-        String title = getItem(position).getGameName();
-        String body = "Ort: " + getItem(position).getGameLocation() + "; Zeit: " + getItem(position).getGameTime();
-
-        TextView titleText = (TextView) view.findViewById(R.id.TitleText);
-        TextView bodyText = (TextView)  view.findViewById(R.id.BodyText);
-
-        titleText.setText(title);
-        bodyText.setText(body);
-
-
-
-
-        return view;
-    }
-    public void add(Game game, final Context context){
-        firebaseGameRef.push().setValue(game,new DatabaseReference.CompletionListener(){
+    public void add(Game game, final Context context) {
+        firebaseGameRef.push().setValue(game, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
-                if (databaseError != null){
-                    Toast.makeText(context,toastAddGameFailed,Toast.LENGTH_SHORT).show();
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(context, toastAddGameFailed, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context,toastGameAdded,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, toastGameAdded, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    public void remove(Game game){
+
+    public void remove(Game game) {
         firebaseGameRef.child(game.getKey()).removeValue();
     }
-    public void addParticipantToGame(Game game, String participantId, Context context){
+
+    public void addParticipantToGame(Game game, String participantId, Context context) {
         game.addParticipant(participantId, context);
+        Log.d("ItemAdapter","game.getKey() ist wohl null? " + game.getKey().toString() );
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
-    public void removeParticipantFromGame(Game game, String participantId, Context context){
+
+    public void removeParticipantFromGame(Game game, String participantId, Context context) {
         game.removeParticipant(participantId, context);
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
+
     private void sortGamesAccordingToActionBar() {
-        if (MainActivity.allGamesIsCurrentView()){
+        if (MainActivity.allGamesIsCurrentView()) {
             sortGamesFromDatabaseByProximity();
             //if current view is "signed in games" only
         } else {
             filterSignedInGamesAndSortByTime();
         }
     }
-    private void sortGamesFromDatabaseByProximity()  {
-        // Sortieren der Spiele aus Firebase
-        gamesInDatabase = (ArrayList<Game>) gamesForCurrentView.clone();
-        Collections.sort(gamesForCurrentView, new Comparator<Game>() {
-            @Override
-            public int compare(Game game, Game t1) {
-                double proximityGame = game.getProximity(NavigationHelperDummy.getLastKnownLocation());
-                double proximityt1 = t1.getProximity(NavigationHelperDummy.getLastKnownLocation());
-                int comparisonResult = Double.compare(proximityGame,proximityt1);
-                return comparisonResult;
-            }
-        });
-        Log.d("bla","gamesForCurrentView nach sort: " + gamesForCurrentView.toString());
-        //notifyDataSetChanged();
+
+    private void sortGamesFromDatabaseByProximity() {
+
+        if (gamesForCurrentView.size() >= 2) {
+            // Sortieren der Spiele aus Firebase
+            gamesInDatabase = (ArrayList<Game>) gamesForCurrentView.clone();
+            Collections.sort(gamesForCurrentView, new Comparator<Game>() {
+                @Override
+                public int compare(Game game, Game t1) {
+                    float proximityGame = game.distanceToGame(getContext());
+                    float proximityt1 = t1.distanceToGame(getContext());
+                    int comparisonResult = Float.compare(proximityGame, proximityt1);
+                    return comparisonResult;
+                }
+            });
+            Log.d("bla", "gamesForCurrentView nach sort: " + gamesForCurrentView.toString());
+            //notifyDataSetChanged();
+        }
+
     }
-    private void filterSignedInGamesAndSortByTime()  {
+
+    private void filterSignedInGamesAndSortByTime() {
 
     }
 }

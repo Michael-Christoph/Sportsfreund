@@ -62,7 +62,7 @@
         android:layout_below="@+id/input_label_time"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:hint="@string/wann_willst_du_spielen"
+        android:hint="@string/hint_time"
         android:singleLine="true"
         android:layout_marginBottom="16dp"
         android:layout_alignParentRight="true"

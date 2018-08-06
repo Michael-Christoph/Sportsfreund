@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
 import android.widget.Button;
@@ -56,7 +57,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
         setupMapButton();
         setupCreateGameButton();
-        setupTextView();
+        //setupTextView();
         itemAdapter = MainActivity.getItemAdapter();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -89,8 +90,9 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         } else {
             String gameName = inputGame.getText().toString();
             String gameTime = inputTime.getText().toString();
+            gameLocation = NavigationController.getInstance(getApplicationContext()).returnLastKnownLocation();
 
-            Game game = new Game(gameName,gameTime,gameLocation.getLatitude(),gameLocation.getLongitude(),currentUser.getUid());
+            Game game = new Game(getApplicationContext(),gameName,gameTime,gameLocation.getLatitude(),gameLocation.getLongitude(),currentUser.getUid());
             //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
             //addGameToDatabase(game);
@@ -127,10 +129,13 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     }
     */
 
+    /*
     private void setupTextView() {
+
         locationSet = findViewById( R.id.location_set );
-        locationSet.setText("Lat: 42.424242424242424");
+        locationSet.setText("dummy");
     }
+    */
 
     private void setupMapButton(){
         Button mapButton = (Button)findViewById(R.id.button_find_place);
@@ -161,7 +166,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             makeGameButton.setEnabled( true );
     }}}
 
-    /*
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -182,7 +187,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         }
         return false;
     }
-    */
+
 
 
 }

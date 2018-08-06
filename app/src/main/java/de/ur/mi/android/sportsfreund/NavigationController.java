@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class NavigationController {
 
-    private static NavigationController mInstance;
+    private static NavigationController mInstance = null;
     private Context context;
     private LocationManager locationManger;
     private Location lastKnownLocation;
@@ -31,12 +31,21 @@ public class NavigationController {
 
 
     private NavigationController(Context context) {
-        this.context = context.getApplicationContext();
+        this.context = context;
         locationManger = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         setBestProvider();
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             lastKnownLocation = locationManger
                     .getLastKnownLocation(bestProvider);
+        } else {
+        //Nutzer dazu auffordern, GPS einzuschalten
+        }
+
+        if (lastKnownLocation == null){
+            Log.d("NavigationController","gps found no location, switched to passive provider");
+            lastKnownLocation = locationManger.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        } else {
+            Log.d("NavigationController","Funktioniert gps wenigstens irgendwann mal?");
         }
 
     }

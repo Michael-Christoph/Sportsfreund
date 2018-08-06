@@ -2,6 +2,7 @@ package de.ur.mi.android.sportsfreund;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +45,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
 
     private void setup()  {
         Intent intent = getIntent();
-        game = (Game) intent.getSerializableExtra("serializable");
+        game = intent.getParcelableExtra("game");
         type = findViewById(R.id.type);
         type.setText(game.getGameName());
         time = findViewById(R.id.time_data);
