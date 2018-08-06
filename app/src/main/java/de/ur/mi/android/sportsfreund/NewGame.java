@@ -3,16 +3,17 @@ package de.ur.mi.android.sportsfreund;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class NewGame extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private EditText inputGame;
     private EditText inputTime;
+    Button makeGameButton;
     private TextView locationSet;
     final int REQUEST_CODE = 1;
     private Location gameLocation;
@@ -27,6 +29,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
+    double locLat;
+    double locLong;
 
 
     private ItemAdapter_neu itemAdapter;
@@ -67,7 +71,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     private void setupCreateGameButton() {
-        Button makeGameButton = findViewById(R.id.button_make_new_game);
+            makeGameButton = findViewById(R.id.button_make_new_game);
+            makeGameButton.setEnabled( false );
         makeGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,9 +81,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         });
     }
 
-
-
-    private void makeNewGame() {
+    private void makeNewGame(){
         currentUser = mAuth.getCurrentUser();
         if (currentUser == null){
             Intent i = new Intent(this,SignUpActivity.class);
@@ -86,10 +89,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         } else {
             String gameName = inputGame.getText().toString();
             String gameTime = inputTime.getText().toString();
-            String gameLocation = locationSet.getText().toString();
 
-
-            Game game = new Game(gameName,gameTime,gameLocation,currentUser.getUid());
+            Game game = new Game(gameName,gameTime,gameLocation.getLatitude(),gameLocation.getLongitude(),currentUser.getUid());
             //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
             //addGameToDatabase(game);
@@ -97,6 +98,18 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             //RealtimeDbAdapter.addGame(game);
         }
     }
+
+    /*
+    private void makeNewGame() {
+        String gameName = inputGame.getText().toString();
+        String gameTime = inputTime.getText().toString();
+        double gameLat = locLat;
+        double gameLong = locLong;
+        Game game = new Game(gameName,gameTime,gameLat,gameLong,uid);
+        new RealtimeSync().execute(game);
+
+    }
+    */
     /*
     private void addGameToDatabase(Game game){
         DatabaseReference mDatabaseGames = FirebaseDatabase.getInstance().getReference("games");
@@ -142,13 +155,13 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         if(resultCode== Activity.RESULT_OK){
 
            Bundle extras = data.getExtras();
-            double locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
-            double locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
+            locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
+            locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
 
-            locationSet.setText( "Lat: " + Double.toString(locLat) + "; Long: " + Double.toString(locLong) );
+            makeGameButton.setEnabled( true );
     }}}
 
-
+    /*
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -169,6 +182,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         }
         return false;
     }
+    */
 
 
 }

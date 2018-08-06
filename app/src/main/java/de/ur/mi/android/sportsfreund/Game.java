@@ -3,6 +3,7 @@ package de.ur.mi.android.sportsfreund;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,8 +18,12 @@ public class Game implements Serializable{
 
     private String gameName;
     private String gameTime;
-    private String gameLocation;
     private String gameDate;
+    private double gameLat;
+    private double gameLong;
+    private Location gameLocation;
+    private Context context;
+    private double gameProximity;
 
     //@JsonIgnore
     private String key;
@@ -34,14 +39,21 @@ public class Game implements Serializable{
 
     }
 
-    public Game(String gameName, String gameTime, String gameLocation, String uid){
+    public Game(String gameName, String gameTime, double gameLat, double gameLong, String uid){
         this.gameName = gameName;
         this.gameTime= gameTime;
-        this.gameLocation = gameLocation;
+        this.gameLat = gameLat;
+        this.gameLong = gameLong;
+        gameLocation.setLatitude( gameLat );
+        gameLocation.setLongitude( gameLong );
         participants.add(uid);
         gameDate = "dummyDate";
 
 
+    public float distanceToGame (Location gameLocation){
+        Location lastKnownLocation = NavigationController.getInstance( context ).returnLastKnownLocation();
+
+        return lastKnownLocation.distanceTo( gameLocation );
     }
 
     public String getGameName(){
@@ -95,5 +107,24 @@ public class Game implements Serializable{
     public void setDate(String date) {
         this.gameDate = date;
     }
+        public double getGameLong() {
+            return gameLong;
+        }
+
+        public void setGameLong(double gameLong) {
+            this.gameLong = gameLong;
+        }
+
+        public double getGameLat() {
+            return gameLat;
+        }
+
+        public void setGameLat(double gameLat) {
+            this.gameLat = gameLat;
+        }
+
+        public double getGameProximity() {
+            return gameProximity;
+        }
 }
 
