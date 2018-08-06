@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameDetails">
+    tools:context=".GameDetails"
+    android:fitsSystemWindows="true">
 
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/description_data"
         android:layout_below="@id/description"
@@ -17,7 +20,7 @@
 
     <TextView
 
-        android:id="@+id/Type"
+        android:id="@+id/type"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Uhrzeit"
@@ -28,7 +31,7 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_below="@id/Type"
+        android:layout_below="@id/type"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Datum:"
@@ -43,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:layout_toRightOf="@+id/Type"
+        android:layout_toRightOf="@+id/type"
         android:text="test"
         android:textStyle="bold"
         android:textAllCaps="true"
@@ -63,17 +66,7 @@
         android:layout_marginTop="5dp"
         android:textSize="15dp"/>
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/showOnMaps"
-        android:text="Spielbeschreibung:"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textAllCaps="true"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
+
 
     <Button
         android:id="@+id/showOnMaps"
@@ -86,9 +79,51 @@
         android:layout_alignParentStart="true"
         android:text="Ort auf Google Maps anzeigen"
         android:layout_marginTop="10dp"
-
         />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showOnMaps"
+        android:text="Spielbeschreibung:"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textAllCaps="true"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <ListView
+        android:id="@+id/gameDetails_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description">
+
+    </ListView>
+    <Button
+        android:id="@+id/button_participate"
+        android:layout_below="@id/gameDetails_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_participate"/>
+    <Button
+        android:id="@+id/button_resign"
+        android:layout_below="@id/button_participate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/button_resign"/>
+
+
 
 
 
 </RelativeLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/navigation_menu_details_activity"
+        android:layout_gravity="left">
+
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>

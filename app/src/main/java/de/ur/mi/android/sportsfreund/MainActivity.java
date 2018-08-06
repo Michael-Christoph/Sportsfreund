@@ -35,13 +35,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBar actionBar;
 
     private static boolean allGamesIsCurrentView = true;
-    private Button newGameButton;
     ArrayList<Game> gamesForCurrentView = new ArrayList<>();
     ArrayList<Game> gamesInDatabase = new ArrayList<>();
 
     private FirebaseAuth auth;
-
-
 
     private static ItemAdapter_neu itemAdapter;
     ListView listView;
@@ -51,10 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //MP: adds offline persistence even if app is destroyed.
-        if (savedInstanceState == null){
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -79,21 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 itemAdapter.add(new Game("test","test","Lat: 42.424242424242424","test"));
             }
         });
-
-        //Button für neues Spiel erstellen
-
-
-        /*
-        //bloss fuer MP zum Testen
-        Button testRegisterButton = findViewById(R.id.register_test_button);
-        testRegisterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-        */
     }
 
     private void setupAdapterAndListView() {
@@ -106,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("bla","onItemClick funktioniert");
                 Game game = itemAdapter.getItem(position);
-                showGame(game.getGameName(),game.getGameTime());
+                showGame(game);
             }
         });
     }
@@ -159,10 +137,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(i);
     }
 
-    private void showGame(String title, String body)  {
+    private void showGame(Game game)  {
         Intent intent = new Intent(this,GameDetails.class);
-        intent.putExtra("title",title);
-        intent.putExtra("body",body);
+        intent.putExtra("serializable",game);
+        //intent.putExtra("title",title);
+        //intent.putExtra("body",body);
         startActivity(intent);
     }
 
@@ -291,5 +270,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public static boolean allGamesIsCurrentView() {
         return allGamesIsCurrentView;
+    }
+    public static void setAllGamesIsCurrentView(boolean allGamesIsCurrentView) {
+        MainActivity.allGamesIsCurrentView = allGamesIsCurrentView;
     }
 }

@@ -6,7 +6,7 @@
     <string name="sign_out">Abmelden</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="registration_request">Bitte registriere dich, damit du dich mit anderen Sportsfreunden treffen kannst!</string>
+    <string name="registration_request">Bitte registriere dich, damit du Änderungen vornehmen kannst!</string>
     <string name="login_request">Bitte melde dich an, damit du dich mit anderen Sportsfreunden treffen kannst!</string>
     <string name="button_login_text">Mit dieser Mail anmelden</string>
     <string name="button_link_to_login_text">Ich bin bereits registriert!</string>
@@ -34,4 +34,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="no_ned">noch nicht gesetz</string>
     <string name="db_game_node">games</string>
+    <string name="participants">Teilnehmer:</string>
+    <string name="button_participate">mich als Teilnehmer hinzufügen</string>
+    <string name="button_resign">mich als Teilnehmer entfernen</string>
+    <string name="participant_already_added">Du bist bereits für das Spiel angemeldet!</string>
+    <string name="participant_not_there">Nicht möglich, denn du bist gar nicht für das Spiel angemeldet!</string>
 </resources>

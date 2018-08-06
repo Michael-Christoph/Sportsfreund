@@ -2,26 +2,30 @@ package de.ur.mi.android.sportsfreund;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Game {
+public class Game implements Serializable{
 
     private String gameName;
     private String gameTime;
     private String gameLocation;
+    private String gameDate;
 
     //@JsonIgnore
     private String key;
 
 
 
-    ArrayList<String> participants = new ArrayList<>();
+    private ArrayList<String> participants = new ArrayList<>();
 
     // Default constructor required by Jackson/GSON for calls to
     // DataSnapshot.getValue(User.class)
@@ -35,6 +39,8 @@ public class Game {
         this.gameTime= gameTime;
         this.gameLocation = gameLocation;
         participants.add(uid);
+        gameDate = "dummyDate";
+
 
     }
 
@@ -53,11 +59,19 @@ public class Game {
         String firstLatDigits = gameLocation.substring(5,20);
         return Double.parseDouble(firstLatDigits)-lastKnownLocation;
     }
-    public void addParticipant(String uid){
-        participants.add(uid);
+    public void addParticipant(String uid, Context context){
+        if (participants.contains(uid)){
+            Toast.makeText(context,R.string.participant_already_added,Toast.LENGTH_LONG).show();
+        } else {
+            participants.add(uid);
+        }
     }
-    public void removeParticipant(String uid){
-        participants.remove(uid);
+    public void removeParticipant(String uid, Context context){
+        if (participants.contains(uid)){
+            participants.remove(uid);
+        } else {
+            Toast.makeText(context,R.string.participant_not_there,Toast.LENGTH_LONG).show();
+        }
     }
 
     @Exclude
@@ -73,6 +87,13 @@ public class Game {
         this.gameLocation = updatedGame.gameLocation;
         this.gameName = updatedGame.gameName;
         this.gameTime = updatedGame.gameTime;
+    }
+    public String getDate() {
+        return gameDate;
+    }
+
+    public void setDate(String date) {
+        this.gameDate = date;
     }
 }
 
