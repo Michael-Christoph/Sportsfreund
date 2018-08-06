@@ -6,16 +6,8 @@
         android:icon="@drawable/ic_add_black_24dp"/>
 
     <item android:id="@+id/myGames"
-        android:title="Meine Spiele"
+        android:title="Spiele Übersicht"
         android:icon="@drawable/ic_event_note_black_24dp"/>
-
-    <item android:id="@+id/localGames"
-        android:title="Spiele in der Umgebung"
-        android:icon="@drawable/ic_my_location_black_24dp"/>
-
-    <item android:id="@+id/acount"
-        android:title="Account"
-        android:icon="@drawable/ic_person_black_24dp"/>
 
 
 

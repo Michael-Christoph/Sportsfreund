@@ -1,11 +1,14 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,7 +18,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class GameDetails extends AppCompatActivity  {
+public class GameDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView type,time,date,description;
     Button showLocation;
@@ -65,6 +68,9 @@ public class GameDetails extends AppCompatActivity  {
 
         //time.setText(getIntent().getStringExtra("title"));
         //date.setText(getIntent().getStringExtra("body"));
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         showLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,5 +146,35 @@ public class GameDetails extends AppCompatActivity  {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.games)  {
+            openActivity(MainActivity.class);
+        }
+
+        if(id == R.id.acount)  {
+            FirebaseUser user = auth.getCurrentUser();
+            if (user != null){
+                startActivity(new Intent(this,AccountActivity.class));
+            } else {
+                startActivity(new Intent(this,SignUpActivity.class));
+            }
+        }
+
+        if (id == R.id.newGame)  {
+            openActivity(NewGame.class);
+        }
+        return false;
+    }
+
+    private void openActivity(Class activity)  {
+        Intent intent = new Intent(this,activity);
+        startActivity(intent);
+
     }
 }
