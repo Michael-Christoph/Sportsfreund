@@ -1,6 +1,7 @@
 package de.ur.mi.android.sportsfreund;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -57,8 +58,12 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         Game gameToView = getItem(position);
         String title = gameToView.getGameName();
         String body = "Zeit: " + gameToView.getDate() + ", " + gameToView.getGameTime() + " Uhr";
-        String body2 = "Entfernung: " + gameToView.distanceToGame(getContext()) + " Meter";
-
+        String body2;
+        if (gameToView.distanceToGame(getContext()) == null){
+            body2 = "Entfernung kann ohne GPS nicht angezeigt werden!";
+        } else {
+            body2 = "Entfernung: " + gameToView.distanceToGame(getContext()) + " Meter";
+        }
         TextView titleText = (TextView) view.findViewById(R.id.TitleText);
         TextView bodyText = (TextView) view.findViewById(R.id.BodyText);
         TextView body2Text = (TextView) view.findViewById(R.id.body_2_text);
@@ -156,7 +161,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
     private void sortGamesFromDatabaseByProximity() {
 
-        if (gamesForCurrentView.size() >= 2) {
+        if (gamesForCurrentView.size() >= 2 &&
+                gamesForCurrentView.get(0).distanceToGame(getContext()) != null) {
             // Sortieren der Spiele aus Firebase
             gamesInDatabase = (ArrayList<Game>) gamesForCurrentView.clone();
             Collections.sort(gamesForCurrentView, new Comparator<Game>() {
@@ -170,6 +176,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             });
             Log.d("bla", "gamesForCurrentView nach sort: " + gamesForCurrentView.toString());
             //notifyDataSetChanged();
+        } else {
+            Log.d("ItemAdapter","gamesForCurrentView ist kleiner 2 oder distanceToGame liefert null.");
         }
 
     }

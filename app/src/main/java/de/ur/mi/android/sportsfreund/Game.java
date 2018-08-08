@@ -1,9 +1,12 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.google.firebase.database.Exclude;
@@ -58,15 +61,20 @@ public class Game implements Parcelable{
     }
 
 
-    public float distanceToGame (Context context){
-        Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-        /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-        Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
-        gameLocation = new Location( "" );
-        gameLocation.setLatitude(this.gameLat);
-        gameLocation.setLongitude(this.gameLong);
-        float distance = lastKnownLocation.distanceTo(gameLocation);
-        return distance;
+    public Float distanceToGame (Context context){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
+            /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
+             Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
+            gameLocation = new Location( "" );
+            gameLocation.setLatitude(this.gameLat);
+            gameLocation.setLongitude(this.gameLong);
+            float distance = lastKnownLocation.distanceTo(gameLocation);
+            return distance;
+        } else {
+            return null;
+        }
+
     }
     public String getGameName(){
         return gameName;

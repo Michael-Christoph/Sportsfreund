@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private String gpsMessage = "Du musst den Zugriff auf den Standort erlauben um Sportsfreund richtig nutzen zu können.";
     private  String gpsTitle = "Achtung";
-    private String positiveButtonText = "OK";
+    private String positiveButtonText = "Erlauben";
+    private String negativeButtonText = "Weiter ohne GPS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
+                        }
+                    });
+
+                    dialogBuilder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finishSetup();
                         }
                     });
                     AlertDialog dialog = dialogBuilder.create();
