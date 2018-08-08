@@ -1,11 +1,19 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static ItemAdapter_neu itemAdapter;
     ListView listView;
     FloatingActionButton fab;
+    private final int LOCATION_REQUEST_CODE = 2;
+
+    private ActionBarDrawerToggle mToggle;
+
+    private String gpsMessage = "Du musst den Zugriff auf den Standort erlauben um Sportsfreund richtig nutzen zu können.";
+    private  String gpsTitle = "Achtung";
+    private String positiveButtonText = "OK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +73,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
 
+        requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
+
+
+    }
+
+    private void finishSetup()  {
         //getGamesFromDatabase_dummy();
         setupAdapterAndListView();
         //getGamesFromDatabase();
@@ -73,6 +95,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 itemAdapter.add(game,MainActivity.this);
             }
         });
+    }
+
+    private void requestPermissions(String permission, int requestCode)  {
+        if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED)  {
+            ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
+
+        }
+        else  {
+            finishSetup();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode)  {
+            case LOCATION_REQUEST_CODE:
+                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED)  {
+                    finishSetup();
+                }
+                else {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                    dialogBuilder.setTitle(gpsTitle);
+                    dialogBuilder.setMessage(gpsMessage);
+                    dialogBuilder.setPositiveButton(positiveButtonText, new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
+                        }
+                    });
+                    AlertDialog dialog = dialogBuilder.create();
+                    dialog.show();
+                }
+
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void setupAdapterAndListView() {

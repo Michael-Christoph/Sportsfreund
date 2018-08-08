@@ -31,14 +31,14 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_below="@id/type"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/type"
         android:text="Datum:"
+        android:textAllCaps="true"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textAllCaps="true"
-        android:layout_marginTop="5dp"/>
+         />
 
     <TextView
 
@@ -66,31 +66,6 @@
         android:layout_marginTop="5dp"
         android:textSize="15dp"/>
 
-
-
-    <Button
-        android:id="@+id/showOnMaps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/date_data"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="Ort auf Google Maps anzeigen"
-        android:layout_marginTop="10dp"
-        />
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/showOnMaps"
-        android:text="Spielbeschreibung:"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textAllCaps="true"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
     <ListView
         android:id="@+id/gameDetails_listView"
         android:layout_width="match_parent"
@@ -98,20 +73,53 @@
         android:layout_below="@id/description">
 
     </ListView>
+
+
+    <Button
+        android:id="@+id/showOnMaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date_data"
+        android:text="Ort auf Google Maps anzeigen"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="103dp" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showOnMaps"
+        android:text="Spielbeschreibung:"
+        android:textAllCaps="true"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="54dp"
+        android:clickable="true"/>
+
     <Button
         android:id="@+id/button_participate"
-        android:layout_below="@id/gameDetails_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetails_listView"
         android:layout_centerHorizontal="true"
-        android:text="@string/button_participate"/>
+        android:text="@string/button_participate"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="163dp" />
+
     <Button
         android:id="@+id/button_resign"
-        android:layout_below="@id/button_participate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/button_participate"
         android:layout_centerHorizontal="true"
-        android:text="@string/button_resign"/>
+        android:text="@string/button_resign"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="231dp" />
 
 
 
