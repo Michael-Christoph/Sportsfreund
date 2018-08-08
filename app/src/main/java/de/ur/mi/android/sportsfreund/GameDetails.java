@@ -15,13 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class GameDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView type,time,date,description;
+    TextView type,time,date,description,desTitle;
     Button showLocation;
     Button participate;
     Button resign;
@@ -37,6 +38,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         itemAdapter = MainActivity.getItemAdapter();
 
         setup();
+
     }
 
     private void setup()  {
@@ -57,6 +60,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         date = findViewById(R.id.date_data);
         date.setText(game.getDate());
         description = findViewById(R.id.description_data);
+
 
         showLocation = findViewById(R.id.showOnMaps);
         listView = findViewById(R.id.gameDetails_listView);
@@ -77,6 +81,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         showLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +89,8 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
 
             }
         });
+
+
 
     }
 
