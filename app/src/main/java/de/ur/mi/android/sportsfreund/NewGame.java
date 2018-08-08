@@ -160,8 +160,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         if(resultCode== Activity.RESULT_OK){
 
            Bundle extras = data.getExtras();
-            locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 0.000001);
-            locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 0.00001);
+            locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 1111111111);
+            locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 11111111);
 
             makeGameButton.setEnabled( true );
             if (locLat != 0){

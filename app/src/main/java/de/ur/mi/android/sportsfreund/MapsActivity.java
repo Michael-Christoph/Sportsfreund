@@ -40,6 +40,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
+    public static final String KEY_LOCATION_LAT_D= "lKeyLatDetails";
+    public static final String KEY_LOCATION_LONG_D = "lKeyLongDetails";
+    public static final String KEY_GAME_NAME = "GameName";
+
     public static final String KEY_LOCATION = "location";
 
 
@@ -57,8 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -66,42 +69,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        showInstructionDialog();
-
-
-        mMap.addMarker(new MarkerOptions().position(REGENSBURG).title(markertitle).draggable(true));
-        mMap.setOnMarkerDragListener(new OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marker) {
-
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-
-                newLocation = marker.getPosition();
-                confirmLocation();
-
-
-
-            }
-        });
+        Intent intent = getIntent();
+        if (intent == null) {
+            selectLocation();
+        } else {
+            showLocDetail();
+        }
     }
 
-    private void goBackToNewGame() {
+        private void selectLocation () {
 
-            Intent result = new Intent(this, NewGame.class);
+            showInstructionDialog();
+
+
+            mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title( markertitle ).draggable( true ) );
+            mMap.setOnMarkerDragListener( new OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+
+                    newLocation = marker.getPosition();
+                    confirmLocation();
+
+
+                }
+            } );
+        }
+
+
+        private void goBackToNewGame () {
+
+            Intent result = new Intent( this, NewGame.class );
 
 
             double locLong = newLocation.longitude;
             double locLat = newLocation.latitude;
 
-            result.putExtra(KEY_LOCATION_LAT, locLat);
+            result.putExtra( KEY_LOCATION_LAT, locLat );
             result.putExtra( KEY_LOCATION_LONG, locLong );
 
 
@@ -111,39 +124,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location dummyLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             result.putExtra(KEY_LOCATION,new Location)
             */
-            setResult(Activity.RESULT_OK, result );
+            setResult( Activity.RESULT_OK, result );
             finish();
 
-    }
+        }
 
-    private void showInstructionDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(titelAnleitung);
-        dialogBuilder.setMessage(textAnleitung);
-        dialogBuilder.setPositiveButton(positiveButton, new Dialog.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        private void showInstructionDialog () {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder( this );
+            dialogBuilder.setTitle( titelAnleitung );
+            dialogBuilder.setMessage( textAnleitung );
+            dialogBuilder.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-            }
-        });
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
+                }
+            } );
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+        }
 
-    private void confirmLocation() {
+        private void confirmLocation () {
 
-            AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder(this);
-            dialogBuilder2.setTitle(titelAnleitung);
-            dialogBuilder2.setMessage(textBestätigung);
-            dialogBuilder2.setPositiveButton(positiveButton, new Dialog.OnClickListener() {
+            AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder( this );
+            dialogBuilder2.setTitle( titelAnleitung );
+            dialogBuilder2.setMessage( textBestätigung );
+            dialogBuilder2.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     goBackToNewGame();
                 }
-            });
+            } );
             AlertDialog dialog = dialogBuilder2.create();
             dialog.show();
         }
+
+
+    private void showLocDetail() {
+        double locLong = getIntent().getExtras().getDouble(KEY_LOCATION_LONG_D);
+        double locLat = getIntent().getExtras().getDouble( KEY_LOCATION_LAT_D );
+        String gameTitle = "Hier wird " + getIntent().getExtras().getString( KEY_GAME_NAME ) +" gespielt";
+
+
+
+        LatLng gameLoc = new LatLng(locLat, locLong);
+
+        mMap.addMarker( new MarkerOptions().position( gameLoc ).title( gameTitle ));
+    }
 
 }
 

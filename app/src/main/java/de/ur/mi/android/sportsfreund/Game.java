@@ -1,21 +1,13 @@
 package de.ur.mi.android.sportsfreund;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 //@IgnoreExtraProperties
@@ -40,6 +32,7 @@ public class Game implements Parcelable{
     //Firebase Realtime Database isn't able to parse non-primitive fields.
     @Exclude
     private Location gameLocation;
+
     @Exclude
     private String key;
 
@@ -54,15 +47,12 @@ public class Game implements Parcelable{
 
     }
 
-    public Game(Context context, String gameName,String gameDate, String gameTime, double gameLat, double gameLong, String uid) {
+    public Game(Context context, String gameName,String gameDate, String gameTime, double locLat, double locLong, String uid) {
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameTime = gameTime;
-        this.gameLat = gameLat;
-        this.gameLong = gameLong;
-        gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-        gameLocation.setLatitude(this.gameLat);
-        gameLocation.setLongitude(this.gameLong);
+        this.gameLat = locLat;
+        this.gameLong = locLong;
 
         participants.add(uid);
     }
@@ -70,10 +60,11 @@ public class Game implements Parcelable{
 
     public float distanceToGame (Context context){
         Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-        gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-        Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );
-        gameLocation.setLatitude(gameLat);
-        gameLocation.setLongitude(gameLong);
+        /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
+        Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
+        gameLocation = new Location( "" );
+        gameLocation.setLatitude(this.gameLat);
+        gameLocation.setLongitude(this.gameLong);
         float distance = lastKnownLocation.distanceTo(gameLocation);
         return distance;
     }

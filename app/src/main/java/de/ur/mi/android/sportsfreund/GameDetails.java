@@ -31,6 +31,10 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
     private Game game;
 
     FirebaseAuth auth;
+    public static final String KEY_LOCATION_LAT_D= "lKeyLatDetails";
+    public static final String KEY_LOCATION_LONG_D = "lKeyLongDetails";
+    public static final String KEY_GAME_NAME = "GameName";
+
 
 
     @Override
@@ -76,11 +80,27 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         showLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLocationonMaps ();
 
             }
         });
 
     }
+
+    private void showLocationonMaps() {
+            Intent showGameLocation = new Intent(this, MapsActivity.class);
+
+        double locLong = game.getGameLong();
+        double locLat = game.getGameLat();
+
+        showGameLocation.putExtra(KEY_LOCATION_LAT_D, locLat);
+        showGameLocation.putExtra( KEY_LOCATION_LONG_D, locLong );
+        showGameLocation.putExtra( KEY_GAME_NAME, game.getGameName() );
+
+            startActivity(showGameLocation);
+
+    }
+
     private void setupParticipateAndResignButtons(){
         participate = findViewById(R.id.button_participate);
 
