@@ -97,6 +97,10 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
             //addGameToDatabase(game);
             itemAdapter.add(game, this);
+            MainActivity.setAllGamesIsCurrentView(false);
+            Intent backToMainWithMyGames = new Intent(this,MainActivity.class);
+            startActivity(backToMainWithMyGames);
+
             //RealtimeDbAdapter.addGame(game);
         }
     }

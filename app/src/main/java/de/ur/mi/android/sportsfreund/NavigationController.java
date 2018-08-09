@@ -34,9 +34,11 @@ public class NavigationController {
         this.context = context;
         locationManger = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         setBestProvider();
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                //ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             lastKnownLocation = locationManger
                     .getLastKnownLocation(bestProvider);
+            Log.d("Navigation Controller", "gps permission wurde erteilt");
         } else {
         //Nutzer dazu auffordern, GPS einzuschalten
         }
