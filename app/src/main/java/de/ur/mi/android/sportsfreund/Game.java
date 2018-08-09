@@ -62,7 +62,7 @@ public class Game implements Parcelable{
 
 
     public Float distanceToGame (Context context){
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && gpsIsEnabled ( context )){
             Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
             /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
              Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
@@ -76,6 +76,12 @@ public class Game implements Parcelable{
         }
 
     }
+
+    private boolean gpsIsEnabled(Context context) {
+        boolean gpsEnabled= NavigationController.getInstance(context).gpsIsEnabled();
+        return gpsEnabled;
+    }
+
     public String getGameName(){
         return gameName;
     }
