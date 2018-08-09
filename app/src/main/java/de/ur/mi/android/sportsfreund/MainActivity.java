@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 itemAdapter.add(game,MainActivity.this);
             }
         });
+
+        SportsfreundNotificationManager.getInstance(this).displayNotification("Alert","Sportsfreund Notification Manager works!");
     }
 
     private void requestPermissions(String permission, int requestCode)  {
