@@ -170,13 +170,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             dialog.show();
         }
 
-
     private void showLocDetail() {
         double locLong = getIntent().getExtras().getDouble(KEY_LOCATION_LONG_D);
         double locLat = getIntent().getExtras().getDouble( KEY_LOCATION_LAT_D );
         String gameTitle = "Hier wird " + getIntent().getExtras().getString( KEY_GAME_NAME ) +" gespielt";
-
-
 
         LatLng gameLoc = new LatLng(locLat, locLong);
 
@@ -188,7 +185,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 CameraUpdateFactory.zoomTo(10);
 
         mMap.moveCamera(center);
-        mMap.animateCamera(zoom);    }
+        mMap.animateCamera(zoom);
+    }
 
 }
 
