@@ -31,9 +31,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     private ArrayList<Game> gamesForCurrentView;
     private DatabaseReference firebaseGameRef;
 
-    private String toastGameAdded = "Spiel wurde erstellt!";
-    private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
-            " versuche es später noch einmal!";
+
+
 
     public ItemAdapter_neu(Context context, ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
@@ -62,7 +61,13 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         if (gameToView.distanceToGame(getContext()) == null){
             body2 = "Entfernung kann ohne GPS nicht angezeigt werden!";
         } else {
-            body2 = "Entfernung: " + gameToView.distanceToGame(getContext()) + " Meter";
+            if (gameToView.distanceToGame(getContext()) <= 1000) {
+                body2 = Math.round(gameToView.distanceToGame(getContext())) + " m";
+            }
+            else {
+                body2 = Math.round(gameToView.distanceToGame(getContext())/1000) + " km";
+            }
+
         }
         TextView titleText = (TextView) view.findViewById(R.id.TitleText);
         TextView bodyText = (TextView) view.findViewById(R.id.BodyText);
@@ -127,9 +132,9 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(context, toastAddGameFailed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.toast_add_game_failed, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, toastGameAdded, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.toast_game_added, Toast.LENGTH_SHORT).show();
                 }
             }
         });

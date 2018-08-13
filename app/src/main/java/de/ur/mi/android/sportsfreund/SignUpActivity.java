@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                                 if (!task.isSuccessful()){
                                     Toast.makeText(SignUpActivity.this,
-                                            "Die Registrierung ist fehlgeschlagen." + task.getException(),
+                                            "Die Registrierung ist fehlgeschlagen" + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     finish();

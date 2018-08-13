@@ -3,6 +3,8 @@ package de.ur.mi.android.sportsfreund;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -38,6 +40,9 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         Log.d("bla","currentUser: " +currentUser);
 
         // back-button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         inputGame = findViewById(R.id.input_name);
         inputDate = findViewById(R.id.input_date);
@@ -60,6 +65,14 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         //setupTextView();
         itemAdapter = MainActivity.getItemAdapter();
 
+        mDrawerLayout = findViewById(R.id.newGameDrawerLayout);
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -69,6 +82,14 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     public void onStart(){
         super.onStart();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(mToggle.onOptionsItemSelected(item))  {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupCreateGameButton() {

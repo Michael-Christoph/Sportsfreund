@@ -33,11 +33,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng newLocation;
 
     final int REQUEST_CODE = 1;
-    private String titelAnleitung = "Anleitung";
-    private String textAnleitung = "Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen";
-    private String positiveButton = "OK";
-    private String textBestätigung = "Wollen sie diesen Ort als Treffpunkt übernehmen?";
-    private String markertitle = "Ort des Spiels";
+    private String markertitle = "Hier wird Gespielt";
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
@@ -85,7 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             showInstructionDialog();
 
 
-            mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title( markertitle ).draggable( true ) );
+
+
+            mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title(markertitle).draggable( true ) );
             mMap.setOnMarkerDragListener( new OnMarkerDragListener() {
                 @Override
                 public void onMarkerDragStart(Marker marker) {
@@ -134,9 +132,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void showInstructionDialog () {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder( this );
-            dialogBuilder.setTitle( titelAnleitung );
-            dialogBuilder.setMessage( textAnleitung );
-            dialogBuilder.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
+            dialogBuilder.setTitle( R.string.title_maps_instruction );
+            dialogBuilder.setMessage( R.string.text_maps_instruction );
+            dialogBuilder.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -149,9 +147,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         private void confirmLocation () {
 
             AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder( this );
-            dialogBuilder2.setTitle( titelAnleitung );
-            dialogBuilder2.setMessage( textBestätigung );
-            dialogBuilder2.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
+            dialogBuilder2.setTitle( R.string.title_maps_instruction );
+            dialogBuilder2.setMessage( R.string.text_maps_verify );
+            dialogBuilder2.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     goBackToNewGame();
