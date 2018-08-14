@@ -34,6 +34,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     private String toastGameAdded = "Spiel wurde erstellt!";
     private String toastAddGameFailed = "Sorry, dein Spiel konnte nicht erstellt werden. Bitte" +
             " versuche es später noch einmal!";
+    private String toastGameDeleted = "Spiel wurde gelöscht: ";
 
     public ItemAdapter_neu(Context context, ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
@@ -134,9 +135,9 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             }
         });
     }
-
-    public void remove(Game game) {
+    public void remove(Game game,Context context) {
         firebaseGameRef.child(game.getKey()).removeValue();
+        Toast.makeText(context, toastGameDeleted + game.getGameName(),Toast.LENGTH_SHORT).show();
     }
 
     public void addParticipantToGame(Game game, String participantId, Context context) {
@@ -147,7 +148,14 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
     public void removeParticipantFromGame(Game game, String participantId, Context context) {
         game.removeParticipant(participantId, context);
-        firebaseGameRef.child(game.getKey()).setValue(game);
+        if (game.getParticipants().size() > 0){
+            Log.d("ItemAdapter","still participants left");
+            firebaseGameRef.child(game.getKey()).setValue(game);
+        } else {
+            Log.d("ItemAdapter","last participant has unregistered");
+            remove(game,context);
+        }
+
     }
 
     private void sortGamesAccordingToActionBar() {

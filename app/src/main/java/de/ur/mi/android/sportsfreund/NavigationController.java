@@ -43,12 +43,15 @@ public class NavigationController {
         //Nutzer dazu auffordern, GPS einzuschalten
         }
 
+
+        /*
         if (lastKnownLocation == null){
             Log.d("NavigationController","gps found no location, switched to passive provider");
             lastKnownLocation = locationManger.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         } else {
             Log.d("NavigationController","Funktioniert gps wenigstens irgendwann mal?");
         }
+        */
 
     }
 

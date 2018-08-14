@@ -103,15 +103,49 @@ exports.reactOnUpdate = functions.database.ref('/games/{pushId}/participants')
            // }
         //  };
    // }
-    token = 'e9EDLv8XAJ0:APA91bEtu8agRCKAehoQSTh5OJNOD_YDMCHhMcz8fyhLGXVv4D5xpthgYCVCNRdxpoIXexxcxyBTAHMk3qzgKmz1Qv4LVkaY5nKQUaeURU2nW3LRZvteTpxmN3eh8uXJCJq5p1eJMl-qgiq04qptskYkvGtHxbGiLg'
-    console.log('token erstellt: ' ,token);
-    return admin.messaging().sendToDevice(token,payload);
+   
+   //BbKn0kF5mKMmBz9EysXGYe4MPeJ2
+   const getUserTokenPromise = admin.database().ref('/users').once('value');
+   
+   return getUserTokenPromise.then(function(snapshot){
+            tokenArray = [];
+              snapshot.forEach(function(childSnapshot){
+                var key = childSnapshot.key;
+                console.log("key: ",key);
+                var value = childSnapshot.val();
+                tokenArray.push(value);
+            });
+            return tokenArray;
+
+            /*
+            console.log('snapshot.val',typeof snapshot.val());
+            var keyValArray = snapshot.val();
+            console.log("keyValArray, Typ: ", typeof keyValArray);
+            keyValArray = typeof keyValArray == 'array' ? keyValArray : [keyValArray];
+            tokenArray = [];
+            keyValArray.forEach(function(entry){
+              console.log("entry",typeof entry);
+              tokenArray.push(entry)
+            });
+            return snapshot.val();
+            */
+    }).then(function(tokenArray){
+      //token = 'eEsEoa0zP6Q:APA91bFWMZOL_3cj7-ohmJPvn2hsUUoMEReNyqw2MPSje36D2yXVglztoWzoEHeOlzu3RwWaAjE-M85NjJreTdxcbIYreo9Py2BF4hvjncVUhoBiJeo6zSQ92SkIBDW270uFj4tO3cY8YVw-mkSHbC92EvwkaK3Vsg';
+      console.log('tokenArray geholt: ' ,tokenArray);
+      return admin.messaging().sendToDevice(tokenArray,payload);
       // You must return a Promise when performing asynchronous tasks inside a Functions such as
       // writing to the Firebase Realtime Database.
       // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
       //return change.after.ref.parent.parent.parent.child('test').set(participantsAfter);
+    });
+    
+    
+    
+    
+
+    /*
     }).then((response) => {
-        //teilweise auskommentiert, da noch unvollständig; vgl. https://github.com/firebase/functions-samples/blob/master/fcm-notifications/functions/index.js#L77
+        //teilweise auskommentiert, da noch unvollstï¿½ndig; vgl. https://github.com/firebase/functions-samples/blob/master/fcm-notifications/functions/index.js#L77
         console.log('entered then clause');
         // For each message check if there was an error.
         const tokensToRemove = [];
@@ -121,19 +155,19 @@ exports.reactOnUpdate = functions.database.ref('/games/{pushId}/participants')
           if (error) {
                console.error('Failure sending notification to certain tokens');
             //console.error('Failure sending notification to', tokens[index], error);
-            /*
+            
             // Cleanup the tokens who are not registered anymore.
             if (error.code === 'messaging/invalid-registration-token' ||
                 error.code === 'messaging/registration-token-not-registered') {
               tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
             }
+          
           }
-          */
+          
         });
         //return Promise.all(tokensToRemove);
-        
-      });
-});
+      */
+    });
     
 
 
