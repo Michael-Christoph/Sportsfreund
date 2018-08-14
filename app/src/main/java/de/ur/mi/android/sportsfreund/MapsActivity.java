@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
@@ -86,6 +87,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title( markertitle ).draggable( true ) );
+            CameraUpdate center=
+                    CameraUpdateFactory.newLatLng(REGENSBURG);
+
+            CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
+
+            mMap.moveCamera(center);
+            mMap.animateCamera(zoom);
+
             mMap.setOnMarkerDragListener( new OnMarkerDragListener() {
                 @Override
                 public void onMarkerDragStart(Marker marker) {
@@ -161,17 +170,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             dialog.show();
         }
 
-
     private void showLocDetail() {
         double locLong = getIntent().getExtras().getDouble(KEY_LOCATION_LONG_D);
         double locLat = getIntent().getExtras().getDouble( KEY_LOCATION_LAT_D );
         String gameTitle = "Hier wird " + getIntent().getExtras().getString( KEY_GAME_NAME ) +" gespielt";
 
-
-
         LatLng gameLoc = new LatLng(locLat, locLong);
 
         mMap.addMarker( new MarkerOptions().position( gameLoc ).title( gameTitle ));
+
+        CameraUpdate center=
+                CameraUpdateFactory.newLatLng(gameLoc);
+        CameraUpdate zoom =
+                CameraUpdateFactory.zoomTo(10);
+
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
     }
 
 }

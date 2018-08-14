@@ -1,27 +1,39 @@
 package de.ur.mi.android.sportsfreund;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.util.Log;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Calendar;
+
 public class NewGame extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private EditText inputGame;
-    private EditText inputDate;
-    private EditText inputTime;
+    private static Button inputTime;
+    private static Button inputDate;
     Button makeGameButton;
+    Button mapButton;
     private TextView locationSet;
     final int REQUEST_CODE = 1;
     private Location gameLocation;
@@ -31,6 +43,9 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
     double locLat;
     double locLong;
+
+    static String gameTime;
+    static String gameDate;
 
 
     private ItemAdapter_neu itemAdapter;
@@ -57,6 +72,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
         setupMapButton();
         setupCreateGameButton();
+        setupDateButton();
+        setupTimeButton();
         //setupTextView();
         itemAdapter = MainActivity.getItemAdapter();
 
@@ -65,6 +82,25 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
 
     }
+
+    private void setupDateButton() {
+        inputDate.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+            }
+        } );
+    }
+
+    private void setupTimeButton() {
+        inputTime.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog( v );
+            }
+        } );
+    }
+
     @Override
     public void onStart(){
         super.onStart();
@@ -82,26 +118,28 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         });
     }
 
-    private void makeNewGame(){
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
-            Intent i = new Intent(this,SignUpActivity.class);
-            startActivity(i);
+    private void makeNewGame() {
+        if (inputGame.getText().toString().isEmpty()) {
+            Toast.makeText( getApplicationContext(), "Bitte gib einen Namen für das Spiel an!", Toast.LENGTH_SHORT ).show();
         } else {
-            String gameName = inputGame.getText().toString();
-            String gameDate = inputDate.getText().toString();
-            String gameTime = inputTime.getText().toString();
+            currentUser = mAuth.getCurrentUser();
+            if (currentUser == null) {
+                Intent i = new Intent( this, SignUpActivity.class );
+                startActivity( i );
+            } else {
+                String gameName = inputGame.getText().toString();
 
-            Game game = new Game(getApplicationContext(),gameName,gameDate,gameTime,locLat,locLong,currentUser.getUid());
-            //Game game = new Game(gameName,gameTime,gameLocation,"testid");
+                Game game = new Game( getApplicationContext(), gameName, gameDate, gameTime, locLat, locLong, currentUser.getUid() );
+                //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
-            //addGameToDatabase(game);
-            itemAdapter.add(game, this);
-            MainActivity.setAllGamesIsCurrentView(false);
-            Intent backToMainWithMyGames = new Intent(this,MainActivity.class);
-            startActivity(backToMainWithMyGames);
+                //addGameToDatabase(game);
+                itemAdapter.add( game, this );
+                MainActivity.setAllGamesIsCurrentView( false );
+                Intent backToMainWithMyGames = new Intent( this, MainActivity.class );
+                startActivity( backToMainWithMyGames );
 
-            //RealtimeDbAdapter.addGame(game);
+                //RealtimeDbAdapter.addGame(game);
+            }
         }
     }
 
@@ -142,7 +180,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     */
 
     private void setupMapButton(){
-        Button mapButton = (Button)findViewById(R.id.button_find_place);
+        mapButton = (Button)findViewById(R.id.button_find_place);
 
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +206,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 11111111);
 
             makeGameButton.setEnabled( true );
+            mapButton.setText( "Ort festgelegt, über GoogleMaps ändern?"  );
             if (locLat != 0){
                 Log.d("NewGame","LocLat: " + locLat);
                 Log.d("NewGame", "LocLong" + locLong);
@@ -197,6 +236,75 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     }
 
 
+    public void showTimePickerDialog(View view) {
+        DialogFragment newFragment = new TimePickerFragment();
+        FragmentManager fragMan = getFragmentManager();
 
+        newFragment.show(fragMan, "timePicker");
+
+    }
+
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        FragmentManager fragMan = getFragmentManager();
+
+        newFragment.show(fragMan, "datePicker");
+    }
+
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int min) {
+            String stunden = String.valueOf(hourOfDay);
+            if (hourOfDay < 10) {
+                stunden = "0" + hourOfDay;
+            }
+
+            String minuten = String.valueOf(min);
+            if (min < 10) {
+                minuten = "0" + minuten;
+            }
+
+            gameTime = stunden +":"+ minuten;
+            inputTime.setText( "Erledigt, Klicke um "+gameTime+ " Uhr zu ändern"  );
+        }
+    }
+
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            gameDate = String.valueOf( year )+String.valueOf( month )+String.valueOf( day );
+
+            Log.d("NewGameDate",gameDate);
+            inputDate.setText( "Erledigt, Klicke um " + day + "."+ month + "."+ year + " zu ändern"  );
+        }
+    }
 }
 

@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NavigationController {
 
@@ -17,6 +18,7 @@ public class NavigationController {
     private LocationManager locationManger;
     private Location lastKnownLocation;
     private String bestProvider;
+    private boolean gpsEnabled = false;
 
     public static NavigationController getInstance(Context context) {
         if (mInstance == null) {
@@ -29,18 +31,25 @@ public class NavigationController {
         return lastKnownLocation;
     }
 
+    public boolean gpsIsEnabled() {
+        return gpsEnabled;
+    }
+
 
     private NavigationController(Context context) {
         this.context = context;
         locationManger = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManger.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("gps", "gpsEnabled");
+            gpsEnabled = true;}
+
         setBestProvider();
+
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 //ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             lastKnownLocation = locationManger
                     .getLastKnownLocation(bestProvider);
             Log.d("Navigation Controller", "gps permission wurde erteilt");
-        } else {
-        //Nutzer dazu auffordern, GPS einzuschalten
         }
 
         if (lastKnownLocation == null){
@@ -56,7 +65,6 @@ public class NavigationController {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-        criteria.setBearingRequired(true);
         bestProvider = locationManger.getBestProvider(criteria, true);
         if (bestProvider == null) {
             Log.e("setbestprovider", "no Provider set");

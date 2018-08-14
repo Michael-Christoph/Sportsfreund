@@ -3,9 +3,11 @@ package de.ur.mi.android.sportsfreund;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,19 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,20 +93,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         SportsfreundNotificationManager.getInstance(this).displayNotification("Alert","Sportsfreund Notification Manager works!");
+
+        tellAboutGps( getApplicationContext() );
     }
 
-    private void requestPermissions(String permission, int requestCode)  {
+    private void tellAboutGps(Context context) {
+        boolean gpsEnabled= NavigationController.getInstance(context).gpsIsEnabled();
+        if ( gpsEnabled == false )
+        {
+            Toast.makeText(context, "GPS ist ausgeschaltet!", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(context, "GPS ist eingeschaltet!", Toast.LENGTH_LONG).show();}
+    }
+
+
+    private  void requestPermissions(String permission, int requestCode)  {
         if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED)  {
             ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
 
         }
+
         else  {
             finishSetup();
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)  {
             case LOCATION_REQUEST_CODE:
                 if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED)  {
@@ -124,7 +132,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialogBuilder.setPositiveButton(positiveButtonText, new Dialog.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                requestPermissions(permissions,LOCATION_REQUEST_CODE);
+                            }
                         }
                     });
 
