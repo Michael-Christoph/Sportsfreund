@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         >
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,8 +35,10 @@
         </activity>
         <activity
             android:name=".SignUpActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
-        <activity android:name=".NewGame" />
+        <activity android:name=".NewGame"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -50,11 +53,15 @@
 
         <activity
             android:name=".MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".GameDetails" />
-        <activity android:name=".SignInActivity" />
+        <activity android:name=".GameDetails"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SignInActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".AccountActivity"></activity>
+        <activity android:name=".AccountActivity"
+            android:screenOrientation="portrait"></activity>
         <!--
         <service android:name=".MyFirebaseInstanceIdService">
             <intent-filter>
