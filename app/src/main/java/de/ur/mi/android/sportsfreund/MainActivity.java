@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //ActionBar zum umschalten zwischen Teilgenommenen und Spielen in der Nähe
     ActionBar actionBar;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
 
     private static boolean allGamesIsCurrentView = true;
     ArrayList<Game> gamesForCurrentView = new ArrayList<>();
@@ -55,12 +58,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FloatingActionButton fab;
     private final int LOCATION_REQUEST_CODE = 2;
 
-    private ActionBarDrawerToggle mToggle;
 
-    private String gpsMessage = "Du musst den Zugriff auf den Standort erlauben um Sportsfreund richtig nutzen zu können.";
-    private  String gpsTitle = "Achtung";
-    private String positiveButtonText = "Erlauben";
-    private String negativeButtonText = "Weiter ohne GPS";
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
+        mDrawerLayout = findViewById(R.id.mainDrawerLayout);
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
 
@@ -93,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Game game = new Game(getApplicationContext(),"Testspiel","06.08.2018","23:59",42.424242424242424,22.424242424242424,"Testid");
-                itemAdapter.add(game,MainActivity.this);
+
+                changeToNewGame();
             }
         });
         tellAboutGps( getApplicationContext() );
@@ -130,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 else {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                    dialogBuilder.setTitle(gpsTitle);
-                    dialogBuilder.setMessage(gpsMessage);
-                    dialogBuilder.setPositiveButton(positiveButtonText, new Dialog.OnClickListener() {
+                    dialogBuilder.setTitle(R.string.gps_title);
+                    dialogBuilder.setMessage(R.string.gps_message);
+                    dialogBuilder.setPositiveButton(R.string.positive_button_text, new Dialog.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -143,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     });
 
-                    dialogBuilder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+                    dialogBuilder.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             finishSetup();
@@ -231,8 +239,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-
-
+    @Override
+    protected void onRestart() {
+        requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
+        super.onRestart();
+    }
 
     //Instanziieren des Action menüs
     @Override
@@ -246,16 +257,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(mToggle.onOptionsItemSelected(item))  {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.signedIn:
                 actionBar.setTitle(R.string.games_signd_in);
                 allGamesIsCurrentView = false;
-                filterSignedInGamesAndSortByTime();
+
+                renewViewAccordingToActionBar();
+                setupAdapterAndListView();
                 break;
             case R.id.nearby:
                 actionBar.setTitle(R.string.games_nearby);
                 allGamesIsCurrentView = true;
-                sortGamesFromDatabaseByProximity();
+
+                renewViewAccordingToActionBar();
+                setupAdapterAndListView();
                 break;
 
 
@@ -340,12 +359,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(id == R.id.localGames) {
             actionBar.setTitle(R.string.games_nearby);
             sortGamesFromDatabaseByProximity();
-            Toast.makeText(this, "localGames", Toast.LENGTH_SHORT).show();
+            setupAdapterAndListView();
+            Toast.makeText(this, R.string.local_games, Toast.LENGTH_SHORT).show();
         }
         if(id == R.id.myGames) {
             actionBar.setTitle(R.string.games_signd_in);
             filterSignedInGamesAndSortByTime();
-            Toast.makeText(this, "myGames", Toast.LENGTH_SHORT).show();
+            setupAdapterAndListView();
+            Toast.makeText(this, R.string.my_games, Toast.LENGTH_SHORT).show();
 
         }
 

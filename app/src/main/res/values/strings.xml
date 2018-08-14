@@ -36,14 +36,28 @@
     <string name="no_ned">noch nicht gesetz</string>
     <string name="db_game_node">games</string>
     <string name="participants">Teilnehmer:</string>
-    <string name="button_participate">mich als Teilnehmer hinzufügen</string>
-    <string name="button_resign">mich als Teilnehmer entfernen</string>
+    <string name="button_participate">Teilnehmen</string>
+    <string name="button_resign">Absagen</string>
     <string name="participant_already_added">Du bist bereits für das Spiel angemeldet!</string>
     <string name="participant_not_there">Nicht möglich, denn du bist gar nicht für das Spiel angemeldet!</string>
     <string name="dummy">Dummy</string>
     <string name="label_date">Datum</string>
-
+    <string name="gps_message">Du musst den Zugriff auf den Standort erlauben um Sportsfreund richtig nutzen zu können.</string>
+    <string name="gps_title">Achtung</string>
+    <string name="positive_button_text">Erlauben</string>
+    <string name="negative_button_text">Weiter ohne GPS</string>
+    <string name="local_games">local games</string>
+    <string name="my_games">my games</string>
+    <string name="toast_game_added">Spiel wurde erstellt!</string>
+    <string name="toast_add_game_failed">Sorry, dein Spiel konnte nicht erstellt werden. Bitte versuche es später noch einmal!</string>
+    <string name="title_maps_instruction">Anleitung</string>
+    <string name="ok">OK</string>
+    <string name="text_maps_instruction">Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen</string>
+    <string name="text_maps_verify">Wollen sie diesen Ort als Treffpunkt übernehmen?</string>
+    <string name="marker_title">Ort des Spiels</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="toastReminder">Okay, wir werden die später nochmals erinnern!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

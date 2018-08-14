@@ -143,9 +143,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void showInstructionDialog () {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder( this );
-            dialogBuilder.setTitle( titelAnleitung );
-            dialogBuilder.setMessage( textAnleitung );
-            dialogBuilder.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
+            dialogBuilder.setTitle( R.string.title_maps_instruction );
+            dialogBuilder.setMessage( R.string.text_maps_instruction );
+            dialogBuilder.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -158,9 +158,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         private void confirmLocation () {
 
             AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder( this );
-            dialogBuilder2.setTitle( titelAnleitung );
-            dialogBuilder2.setMessage( textBestätigung );
-            dialogBuilder2.setPositiveButton( positiveButton, new Dialog.OnClickListener() {
+            dialogBuilder2.setTitle( R.string.title_maps_instruction );
+            dialogBuilder2.setMessage( R.string.text_maps_verify );
+            dialogBuilder2.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     goBackToNewGame();

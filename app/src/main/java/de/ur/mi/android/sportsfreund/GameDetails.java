@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +38,10 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
     public static final String KEY_LOCATION_LONG_D = "lKeyLongDetails";
     public static final String KEY_GAME_NAME = "GameName";
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
+
 
 
 
@@ -46,32 +52,46 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         auth = FirebaseAuth.getInstance();
         itemAdapter = MainActivity.getItemAdapter();
 
+        mDrawerLayout = findViewById(R.id.detailsDrawerLayout);
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setup();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(mToggle.onOptionsItemSelected(item))  {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 
     private void setup()  {
         Intent intent = getIntent();
         game = intent.getParcelableExtra("game");
-        type = findViewById(R.id.type);
+        type = findViewById(R.id.title);
         type.setText(game.getGameName());
-        time = findViewById(R.id.time_data);
+        time = findViewById(R.id.time);
         time.setText(game.getGameTime());
-        date = findViewById(R.id.date_data);
+        date = findViewById(R.id.date);
         date.setText(game.getDate());
-        description = findViewById(R.id.description_data);
+
 
 
         showLocation = findViewById(R.id.showOnMaps);
-        listView = findViewById(R.id.gameDetails_listView);
+
         TextView headerView = new TextView(getApplicationContext());
         headerView.setText(R.string.participants);
         headerView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
         headerView.setAllCaps(true);
-        listView.addHeaderView(headerView);
-        ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,
-                android.R.id.text1,game.getParticipants());
-        listView.setAdapter(aa);
+
 
         setupParticipateAndResignButtons();
 
