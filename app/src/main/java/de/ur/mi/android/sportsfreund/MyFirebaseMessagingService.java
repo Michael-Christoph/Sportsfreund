@@ -75,8 +75,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         */
     }
     public static void sendTokenToDatabase(FirebaseUser user){
-        DatabaseReference firebaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
-        String token = FirebaseInstanceId.getInstance().getInstanceId()
+        final DatabaseReference firebaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        final String userId = user.getUid();
+        FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
@@ -85,11 +86,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             return;
                         }
                         String token = task.getResult().getToken();
+                        Log.d("FirebaseMessaging", "Token: " + token);
+                        firebaseUsersRef.child(userId).setValue(token);
+                        mostRecentTokenSavedInDatabase = true;
                     }
-                })
-        Constants.mostRecentToken = token;
-        firebaseUsersRef.child(user.getUid()).setValue(Constants.mostRecentToken);
-        mostRecentTokenSavedInDatabase = true;
+                });
+
+
     }
     private void showLoginRecommendationDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
