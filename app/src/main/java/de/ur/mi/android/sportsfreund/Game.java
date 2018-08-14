@@ -66,11 +66,16 @@ public class Game implements Parcelable{
             Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
             /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
              Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
-            gameLocation = new Location( "" );
-            gameLocation.setLatitude(this.gameLat);
-            gameLocation.setLongitude(this.gameLong);
-            float distance = lastKnownLocation.distanceTo(gameLocation);
-            return distance;
+            if (lastKnownLocation != null){
+                gameLocation = new Location( "" );
+                gameLocation.setLatitude(this.gameLat);
+                gameLocation.setLongitude(this.gameLong);
+                float distance = lastKnownLocation.distanceTo(gameLocation);
+                return distance;
+            } else {
+                return null;
+            }
+
         } else {
             return null;
         }

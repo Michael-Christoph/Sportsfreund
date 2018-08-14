@@ -52,12 +52,15 @@ public class NavigationController {
             Log.d("Navigation Controller", "gps permission wurde erteilt");
         }
 
+
+        /*
         if (lastKnownLocation == null){
             Log.d("NavigationController","gps found no location, switched to passive provider");
             lastKnownLocation = locationManger.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         } else {
             Log.d("NavigationController","Funktioniert gps wenigstens irgendwann mal?");
         }
+        */
 
     }
 

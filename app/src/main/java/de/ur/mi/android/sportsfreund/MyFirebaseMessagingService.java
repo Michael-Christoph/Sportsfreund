@@ -1,16 +1,33 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 // cf. https://www.simplifiedcoding.net/firebase-cloud-messaging-tutorial-android/
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    public static boolean mostRecentTokenSavedInDatabase;
+    private static final String titelFehlermeldung = "WICHTIGER HINWEIS";
+    private static final String textFehlermeldung = "Damit du über neue Infos zu deinen Spielen " +
+            "werden kannst, musst du dich anmelden.";
+    private static final String textPositiveButton = "Zum Anmeldebildschirm";
+    private static final String textNegativeButton = "Jetzt nicht";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage){
+        Log.d("FirebaseMessaging","entered onMessageReceived");
         super.onMessageReceived(remoteMessage);
         if (remoteMessage.getData().size() > 0){
             //read data from message (key-value-pairs)
@@ -19,9 +36,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String body = remoteMessage.getNotification().getBody();
         //use title and body to build a notification
 
+        SportsfreundNotificationManager.getInstance(this).displayNotification(title,body);
+
+
     }
     @Override
     public void onNewToken(String token){
+        Log.d("FirebaseMessaging","New Token: " + token);
+        Constants.mostRecentToken = token;
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null){
+            sendTokenToDatabase(user);
+        } else {
+            mostRecentTokenSavedInDatabase = false;
+            Log.d("FirebaseMessaging","user is null");
+            //showLoginRecommendationDialog();
+            Intent switchToSignIn = new Intent(getApplicationContext(),SignInActivity.class);
+            switchToSignIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(switchToSignIn);
+        }
 
         /*
         // Get updated InstanceID token.
@@ -33,5 +67,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Instance ID token to your app server.
         //sendRegistrationToServer(refreshedToken);
         */
+    }
+    public static void sendTokenToDatabase(FirebaseUser user){
+        DatabaseReference firebaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        firebaseUsersRef.child(user.getUid()).setValue(Constants.mostRecentToken);
+        mostRecentTokenSavedInDatabase = true;
+    }
+    private void showLoginRecommendationDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(titelFehlermeldung);
+        dialogBuilder.setMessage(textFehlermeldung);
+        dialogBuilder.setPositiveButton(textPositiveButton,new Dialog.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog,int which){
+                Intent startLoginActivity = new Intent(MyFirebaseMessagingService.this,SignInActivity.class);
+                startActivity(startLoginActivity);
+            }
+        });
+        dialogBuilder.setNegativeButton(textNegativeButton,new Dialog.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog,int which){
+                Toast.makeText(getApplicationContext(),R.string.toastReminder,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

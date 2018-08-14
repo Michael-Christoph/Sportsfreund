@@ -6,8 +6,8 @@
     <string name="sign_out">Abmelden</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="registration_request">Bitte registriere dich, damit du Änderungen vornehmen kannst!</string>
-    <string name="login_request">Bitte melde dich an, damit du dich mit anderen Sportsfreunden treffen kannst!</string>
+    <string name="registration_request">Bitte registriere dich, damit du alle Funktionen der Sportsfreund-App nutzen kannst!</string>
+    <string name="login_request">Bitte melde dich an, damit du alle Funktionen der Sportsfreund-App nutzen kannst!</string>
     <string name="button_login_text">Mit dieser Mail anmelden</string>
     <string name="button_link_to_login_text">Ich bin bereits registriert!</string>
     <string name="button_link_to_signUp_text">Ich bin noch nicht registriert!</string>
@@ -43,6 +43,7 @@
     <string name="dummy">Dummy</string>
     <string name="label_date">Datum</string>
 
+    <string name="toastReminder">Okay, wir werden die später nochmals erinnern!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import static android.content.ContentValues.TAG;
 
+/*
 // cf. https://www.simplifiedcoding.net/firebase-cloud-messaging-tutorial-android/
 public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
@@ -24,3 +25,4 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
         //sendRegistrationToServer(refreshedToken);
     }
 }
+*/

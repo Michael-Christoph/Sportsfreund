@@ -28,7 +28,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -91,9 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 itemAdapter.add(game,MainActivity.this);
             }
         });
-
-        SportsfreundNotificationManager.getInstance(this).displayNotification("Alert","Sportsfreund Notification Manager works!");
-
         tellAboutGps( getApplicationContext() );
     }
 
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private  void requestPermissions(String permission, int requestCode)  {
+    private void requestPermissions(String permission, int requestCode)  {
         if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED)  {
             ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
 
@@ -135,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 requestPermissions(permissions,LOCATION_REQUEST_CODE);
                             }
+                            //Timo hat ursprgl geschrieben:
+                            //requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
                         }
                     });
 
