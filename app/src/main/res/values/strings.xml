@@ -58,6 +58,17 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="toastReminder">Okay, wir werden die später nochmals erinnern!</string>
+    <string name="ACTION_UNREGISTER_FROM_GAME">de.ur.mi.android.sportsfreund.UNREGISTER_FROM_GAME</string>
+    <string name="ACTION_PARTICIPATE">de.ur.mi.android.sportsfreund.PARTICIPATE</string>
+    <string name="toastThanksForFeedback">Deine SPORTSFREUNDe sagen Danke für dein Feedback!</string>
+    <string name="title_activity_simulation">SimulationActivity</string>
+
+    <string name="simulation_explanation">Liebe Korrektoren, nutzen Sie bitte diese Activity, um ohne ein zweites Android-Gerät unser Push-Notification-Feature zu testen.</string>
+    <string name="simulation_addTestGame">Spiel \'Testspiel\' erstellen</string>
+    <string name="simulation_addParticipant">Mich zum Spiel \'Testspiel\' hinzufügen</string>
+    <string name="simulation_explanation_2">Wenn Sie jetzt einen der beiden folgenden Buttons drücken, sollten Sie eine Notification erhalten. Bitte beachten Sie, dass keine sonstigen Notifications auf Ihrem Gerät offen sind, sonst sind die Interaktions-Buttons nicht sichtbar!</string>
+    <string name="simulation_addRandomParticipant">Zufälligen Teilnehmer zum Spiel \'Testspiel\' hinzufügen</string>
+    <string name="simulation_removeRandomParticipant">Zufälligen Teilnehmer vom Spiel \'Testspiel\' entfernen</string>
 
 
 </resources>

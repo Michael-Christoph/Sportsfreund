@@ -37,11 +37,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0){
             //read data from message (key-value-pairs)
         }
+
+        /*
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
+        */
+        String typeOfChange = remoteMessage.getData().get("typeOfChange");
+        String gameName = remoteMessage.getData().get("gameName");
+        String gameKey = remoteMessage.getData().get("gameKey");
+
+
         //use title and body to build a notification
 
-        SportsfreundNotificationManager.getInstance(this).displayNotification(title,body);
+        SportsfreundNotificationManager.getInstance(this).displayNotification(typeOfChange,gameName,gameKey);
 
 
     }

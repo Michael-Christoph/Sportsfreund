@@ -77,72 +77,160 @@ exports.sendNotification = functions.database.ref('/games/{userId}/{pushId}').on
 //https://firebase.google.com/docs/functions/database-events
 
 
-// Listens for new messages added to /games/:pushId/participants and creates an
-// uppercase version of the message to /games/:pushId/uppercase
+
+// Listens for new participants added to /games/:pushId/participants
 exports.reactOnUpdate = functions.database.ref('/games/{pushId}/participants')
-//parameter war vorher: (snapshot,context)
     .onUpdate((change,context) => {
-      
+      //declared here in order to make it available everywhere
+      var payload;
+      var participantsToBeInformed;
       const participantsBefore = change.before.val();
       const participantsAfter = change.after.val();
-      console.log('grabbed participants', context.params.pushId, participantsAfter);
+      console.log('This is how change.before.val() looks: ',participantsBefore);
+      console.log('change.before.val() is of type: ',typeof participantsBefore);
+      console.log('This is how change.after.val() looks: ',participantsAfter);
+      console.log('change.after.val() is of type: ',typeof participantsAfter);
       
-      //game = change.after.ref.parent.child('gameName').val()
-      //if (participantsBefore.length > participantsAfter.length){
-          const payload = {
-            notification: {
-            title: 'Neuer Teilnehmer in einem Spiel!',
-            body: `Bist du weiterhin interessiert?`
+      /*
+      var participantsBefore = Object.keys(change.before).map(function(key){
+        return change.before[key];
+      })
+      
+      var participantsAfter = Object.keys(change.after).map(function(key){
+        return change.after[key];
+      })
+      */
+      
+      for (entry in participantsAfter){
+        console.log('entry: ',entry);
+        console.log('value at entry: ',participantsAfter[entry]);
+        console.log('type of entry: ',typeof entry);
+      }
+      
+      const getGameRefPromise = admin.database().ref('games').child(context.params.pushId).once('value');
+      return getGameRefPromise.then(function(snapshot){
+        //const gameKey = snapshot.val();
+        const gameKey = context.params.pushId;
+        console.log('grabbed gameKey',gameKey);
+        const updatedGameName = snapshot.child('gameName').val();
+
+        var numParticipantsBefore = 0;
+        participantsBefore.forEach(function(entry){
+          if (entry != null){
+            numParticipantsBefore++;
+          }
+        });
+        var numParticipantsAfter = 0;
+        participantsAfter.forEach(function(entry){
+          if (entry != null){
+            numParticipantsAfter++;
+          }
+        });
+        console.log('Anzahl participantsBefore:',numParticipantsBefore);
+        console.log('Anzahl participantsAfter:',numParticipantsAfter);
+        
+        if (numParticipantsBefore > numParticipantsAfter){
+          payload = {
+            data: {
+              typeOfChange: 'participant left',
+              gameName: updatedGameName,
+              gameKey: gameKey
             }
           };
-     // } else {
-     //     const payload = {
-        //    notification: {
-           //     title: 'Ein Teilnehmer hat sich aus einem Spiel ausgetragen.',
-             //   body: `Bist du weiterhin interessiert?`
-           // }
-        //  };
-   // }
-   
-   //BbKn0kF5mKMmBz9EysXGYe4MPeJ2
-   const getUserTokenPromise = admin.database().ref('/users').once('value');
-   
-   return getUserTokenPromise.then(function(snapshot){
-            tokenArray = [];
-              snapshot.forEach(function(childSnapshot){
-                var key = childSnapshot.key;
-                console.log("key: ",key);
-                var value = childSnapshot.val();
-                tokenArray.push(value);
-            });
-            return tokenArray;
+          participantsToBeInformed = participantsAfter;
+        } else {
+          payload = {
+            data: {
+              typeOfChange: 'new participant',
+              gameName: updatedGameName,
+              gameKey: gameKey
+            }
+          };
+          participantsToBeInformed = participantsBefore
+        }
+        
+        
+        const getUserTokenPromise = admin.database().ref('/users').once('value');
+        return getUserTokenPromise;
+      }).then(function(snapshot){
+        tokenArray = [];
 
-            /*
-            console.log('snapshot.val',typeof snapshot.val());
-            var keyValArray = snapshot.val();
-            console.log("keyValArray, Typ: ", typeof keyValArray);
-            keyValArray = typeof keyValArray == 'array' ? keyValArray : [keyValArray];
-            tokenArray = [];
-            keyValArray.forEach(function(entry){
-              console.log("entry",typeof entry);
-              tokenArray.push(entry)
-            });
-            return snapshot.val();
-            */
-    }).then(function(tokenArray){
-      //token = 'eEsEoa0zP6Q:APA91bFWMZOL_3cj7-ohmJPvn2hsUUoMEReNyqw2MPSje36D2yXVglztoWzoEHeOlzu3RwWaAjE-M85NjJreTdxcbIYreo9Py2BF4hvjncVUhoBiJeo6zSQ92SkIBDW270uFj4tO3cY8YVw-mkSHbC92EvwkaK3Vsg';
-      console.log('tokenArray geholt: ' ,tokenArray);
-      return admin.messaging().sendToDevice(tokenArray,payload);
-      // You must return a Promise when performing asynchronous tasks inside a Functions such as
-      // writing to the Firebase Realtime Database.
-      // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
-      //return change.after.ref.parent.parent.parent.child('test').set(participantsAfter);
-    });
-    
-    
-    
-    
+        tokensAtUserNode = [];
+        
+        snapshot.forEach(function(childSnapshot){
+          var key = childSnapshot.key;
+          var value = childSnapshot.val();
+          
+          function myContainsFunction(array,obj){
+            var i = array.length;
+            while (i--){
+              if (array[i] === obj){
+                return true;
+              }
+            }
+            return false;
+          }
+          if (myContainsFunction(participantsToBeInformed,key)){
+            tokenArray.push(value);
+          }
+          tokensAtUserNode.push(value);
+          console.log('tokensAtUserNode: ',tokensAtUserNode);
+        })
+        
+        /*
+        allKeysArray = [];
+        allTokensArray = [];
+        snapshot.forEach(function(childSnapshot){
+          var key = childSnapshot.key;
+          console.log("key: ",key);
+          allKeysArray.push(key);
+          var value = childSnapshot.val();
+          allTokensArray.push(value);
+        });
+        participantsAfter.forEach(function(entry){
+          console.log('allKeysArray.includes(entry): ',allKeysArray.includes(entry));
+          if (allKeysArray.includes(entry)){
+            console.log('snapshot[entry]: ',snapshot[entry]);
+            tokenArray.push(snapshot[entry]);
+          }
+        });
+        
+        //funktionierende Version:
+        snapshot.forEach(function(childSnapshot){
+          var key = childSnapshot.key;
+          console.log("key: ",key);
+          var value = childSnapshot.val();
+          tokenArray.push(value);
+            
+        });
+        */
+        
+        return tokenArray;
 
+        /*
+        console.log('snapshot.val',typeof snapshot.val());
+        var keyValArray = snapshot.val();
+        console.log("keyValArray, Typ: ", typeof keyValArray);
+        keyValArray = typeof keyValArray == 'array' ? keyValArray : [keyValArray];
+        tokenArray = [];
+        keyValArray.forEach(function(entry){
+          console.log("entry",typeof entry);
+          tokenArray.push(entry)
+        });
+        return snapshot.val();
+        */
+        
+      }).then(function(tokenArray){
+  //token = 'eEsEoa0zP6Q:APA91bFWMZOL_3cj7-ohmJPvn2hsUUoMEReNyqw2MPSje36D2yXVglztoWzoEHeOlzu3RwWaAjE-M85NjJreTdxcbIYreo9Py2BF4hvjncVUhoBiJeo6zSQ92SkIBDW270uFj4tO3cY8YVw-mkSHbC92EvwkaK3Vsg';
+  console.log('tokenArray geholt: ' ,tokenArray);
+  return admin.messaging().sendToDevice(tokenArray,payload);
+  // You must return a Promise when performing asynchronous tasks inside a Functions such as
+  // writing to the Firebase Realtime Database.
+  // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
+  //return change.after.ref.parent.parent.parent.child('test').set(participantsAfter);
+      });
+      
+   
     /*
     }).then((response) => {
         //teilweise auskommentiert, da noch unvollst�ndig; vgl. https://github.com/firebase/functions-samples/blob/master/fcm-notifications/functions/index.js#L77
@@ -167,6 +255,7 @@ exports.reactOnUpdate = functions.database.ref('/games/{pushId}/participants')
         });
         //return Promise.all(tokensToRemove);
       */
+    
     });
     
 

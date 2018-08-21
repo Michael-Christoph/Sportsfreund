@@ -100,6 +100,7 @@ public class Game implements Parcelable{
         return gameLong;
     }
 
+
     public ArrayList<String> getParticipants() {
         return participants;
     }

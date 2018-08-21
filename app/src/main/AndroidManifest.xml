@@ -8,7 +8,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- added for Firebase Cloud Messaging -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -54,19 +54,54 @@
         <activity android:name=".GameDetails" />
         <activity android:name=".SignInActivity" />
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".AccountActivity"></activity>
+        <activity android:name=".AccountActivity" />
+
+        <receiver android:name=".NotificationInteractionReceiver">
+            <intent-filter>
+
+                <!-- <action android:name="@string/ACTION_UNREGISTER_FROM_GAME"/> -->
+                <action android:name="de.ur.mi.android.sportsfreund.UNREGISTER_FROM_GAME" />
+            </intent-filter>
+            <intent-filter>
+
+                <!-- <action android:name="@string/ACTION_PARTICIPATE"/> -->
+                <action android:name="de.ur.mi.android.sportsfreund.PARTICIPATE" />
+            </intent-filter>
+        </receiver>
         <!--
         <service android:name=".MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
-        </service>-->
-        <service
-            android:name=".MyFirebaseMessagingService">
+        </service>
+        -->
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!-- cf. https://firebase.google.com/docs/cloud-messaging/android/receive -->
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/common_google_signin_btn_icon_light_focused" />
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <activity android:name=".DebugActivity" />
+        <activity
+            android:name=".SimulationActivity"
+            android:label="@string/title_activity_simulation"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

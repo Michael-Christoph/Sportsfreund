@@ -1,8 +1,6 @@
 package de.ur.mi.android.sportsfreund;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -13,11 +11,9 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +36,8 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+
+    private String toastParticipantRemoved = "Du bist jetzt von dem Spiel abgemeldet";
 
 
 
@@ -163,7 +161,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                     startActivity(new Intent(GameDetails.this,SignUpActivity.class));
                 } else {
                     if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
-                        itemAdapter.removeParticipantFromGame(game,user.getUid(), getApplicationContext());
+                        itemAdapter.removeParticipantFromGame(game,user.getUid(), getApplicationContext(),toastParticipantRemoved);
                         Log.d("bla","resign clicked, user found, id: " + user.getUid());
                         resign.setEnabled(false);
                         MainActivity.setAllGamesIsCurrentView(false);
@@ -205,7 +203,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
             openActivity(MainActivity.class);
         }
 
-        if(id == R.id.acount)  {
+        if(id == R.id.account)  {
             FirebaseUser user = auth.getCurrentUser();
             if (user != null){
                 startActivity(new Intent(this,AccountActivity.class));

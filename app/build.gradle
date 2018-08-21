@@ -4,12 +4,13 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "de.ur.mi.android.sportsfreund"
+        //corresponds to 4.1/Jelly Bean, the bottom limit for interactive notifications
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        //add after merge and error: java.lang.NoClassDefFoundError: com.google.android.gms.common.internal.zzbq
+        //added after merge and error: java.lang.NoClassDefFoundError: com.google.android.gms.common.internal.zzbq
         multiDexEnabled true
     }
     buildTypes {

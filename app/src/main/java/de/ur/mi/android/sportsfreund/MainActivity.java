@@ -29,13 +29,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.security.acl.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +97,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
 
                 changeToNewGame();
+                /*
+                String gameKey = "-LJsF-e5rkJAQGi4PxmS";
+                auth = FirebaseAuth.getInstance();
+                if (auth.getCurrentUser() != null){
+                    MainActivity.getItemAdapter().removeParticipantFromGameViaKey(gameKey,auth.getCurrentUser().getUid());
+                } else {
+                    Log.d("Receiver","user is null");
+                    //Alert, dass leider keine Abmeldung möglich; User möge sich bitte zuerst anmelden
+                    // und dann manuell vom Spiel abmelden.
+                }
+                */
             }
         });
         tellAboutGps( getApplicationContext() );
@@ -121,10 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void requestPermissions(String permission, int requestCode)  {
         if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED)  {
             ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
-
-        }
-
-        else  {
+        } else {
             finishSetup();
         }
     }
@@ -185,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void getGamesFromDatabase_dummy() {
         Game game1 = new Game("Testgame1","Testtime1","Testlocation1","egalid");
         Game game2 = new Game("Testgame2","Testtime2","Testlocation2","egalid2");
-        gamesForCurrentView.add(game1);
-        gamesForCurrentView.add(game2);
+        gamesForCurrentView.addGameToDatabase(game1);
+        gamesForCurrentView.addGameToDatabase(game2);
     }
     */
 
@@ -200,11 +202,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 gamesInDatabase.clear();
                 for (DataSnapshot gameDataSnapshot: dataSnapshot.getChildren()){
                     Game game = gameDataSnapshot.getValue(Game.class);
-                    gamesInDatabase.add(game);
-                    //itemAdapter.add(game);
+                    gamesInDatabase.addGameToDatabase(game);
+                    //itemAdapter.addGameToDatabase(game);
                 }
                 renewViewAccordingToActionBar();
-                //MP: didn't work for some reason, so I decided to add the games directly to the
+                //MP: didn't work for some reason, so I decided to addGameToDatabase the games directly to the
                 //itemAdapter, not to the ArrayList (in the for loop above)
                 //itemAdapter.notifyDataSetChanged();
             }
@@ -287,10 +289,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Collections.sort(gamesInDatabase, new Comparator<Game>() {
             @Override
             public int compare(Game game, Game t1) {
-                double proximityGame = game.distanceToGame(getApplicationContext());
+                Log.d("MainActivity","gamesInDatabase: " + gamesInDatabase.toString());
+                Log.d("MainActivity","game: " + game.getGameName());
+                Log.d("MainActivity","getAppContext: " + getApplicationContext().toString());
+                Float proximityGame = game.distanceToGame(getApplicationContext());
                 Log.d("bla","proxmityGame: " + proximityGame);
-                double proximityt1 = t1.distanceToGame(getApplicationContext());
+                Float proximityt1 = t1.distanceToGame(getApplicationContext());
                 Log.d("bla","proximityt1: " + proximityt1);
+                if (proximityGame == null || proximityt1 == null){
+                    return 0;
+                }
                 int comparisonResult = Double.compare(proximityGame,proximityt1);
                 Log.d("bla","comparisonResult: " + comparisonResult);
                 return comparisonResult;
@@ -330,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         gamesForCurrentView = gamesInDatabase;
         itemAdapter.clear();
         for (Game game: gamesForCurrentView){
-            itemAdapter.add(game);
+            itemAdapter.addGameToDatabase(game);
         }
     }
     */
@@ -344,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        if(id == R.id.acount) {
+        if(id == R.id.account) {
             FirebaseUser user = auth.getCurrentUser();
             if (user != null){
                 startActivity(new Intent(MainActivity.this,AccountActivity.class));
@@ -368,6 +376,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setupAdapterAndListView();
             Toast.makeText(this, R.string.my_games, Toast.LENGTH_SHORT).show();
 
+        }
+        if (id == R.id.debug_item){
+            startActivity(new Intent(this,DebugActivity.class));
+        }
+        if (id == R.id.simulation){
+            startActivity(new Intent(this,SimulationActivity.class));
         }
 
         return false;

@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
@@ -152,7 +151,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
                 //Game game = new Game(gameName,gameTime,gameLocation,"testid");
 
                 //addGameToDatabase(game);
-                itemAdapter.add( game, this );
+                itemAdapter.addGameToDatabase( game, this );
                 MainActivity.setAllGamesIsCurrentView( false );
                 Intent backToMainWithMyGames = new Intent( this, MainActivity.class );
                 startActivity( backToMainWithMyGames );
@@ -238,7 +237,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
 
         int id = item.getItemId();
 
-        if(id == R.id.acount)  {
+        if(id == R.id.account)  {
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null){
                 startActivity(new Intent(this,AccountActivity.class));
@@ -311,7 +310,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
+            int month = c.get(Calendar.MONTH) + 1;
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
@@ -319,10 +318,19 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            gameDate = String.valueOf( year )+String.valueOf( month )+String.valueOf( day );
+            String yearAsString = Integer.toString(year);
+            String monthAsString = Integer.toString(month);
+            String dayAsString = Integer.toString(day);
+            if (month < 10){
+                monthAsString = "0" + monthAsString;
+            }
+            if (day < 10){
+                dayAsString = "0" + dayAsString;
+            }
+            gameDate = yearAsString + "-" + monthAsString + "-" + dayAsString;
 
             Log.d("NewGameDate",gameDate);
-            inputDate.setText( "Erledigt, Klicke um " + day + "."+ month + "."+ year + " zu ändern"  );
+            inputDate.setText( "Erledigt, Klicke um " + gameDate + " zu ändern"  );
         }
     }
 }

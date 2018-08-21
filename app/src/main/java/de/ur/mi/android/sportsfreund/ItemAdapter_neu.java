@@ -1,7 +1,6 @@
 package de.ur.mi.android.sportsfreund;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +37,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             " versuche es später noch einmal!";
     */
     private String toastGameDeleted = "Spiel wurde gelöscht: ";
+
 
     public ItemAdapter_neu(Context context, ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
@@ -100,12 +101,18 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String key = dataSnapshot.getKey();
             Game updatedGame = dataSnapshot.getValue(Game.class);
-            for (Game game : gamesForCurrentView) {
-                if (game.getKey().equals(key)) {
-                    game.setValues(updatedGame);
-                    notifyDataSetChanged();
+            updatedGame.setKey(key);
+            if (updatedGame.getParticipants().size() == 0){
+                remove(updatedGame,getContext());
+            } else {
+                for (Game game : gamesForCurrentView) {
+                    if (game.getKey().equals(key)) {
+                        game.setValues(updatedGame);
+                        //notifyDataSetChanged();
+                    }
                 }
             }
+            notifyDataSetChanged();
         }
 
         @Override
@@ -131,7 +138,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         }
     }
 
-    public void add(Game game, final Context context) {
+    public void addGameToDatabase(Game game, final Context context) {
+        Log.d("ItemAdapter: ","entered addGameToDatabase-method");
         firebaseGameRef.push().setValue(game, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -155,16 +163,39 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
 
-    public void removeParticipantFromGame(Game game, String participantId, Context context) {
+    public void removeParticipantFromGame(Game game, String participantId, Context context,String successMessage) {
         game.removeParticipant(participantId, context);
         if (game.getParticipants().size() > 0){
             Log.d("ItemAdapter","still participants left");
             firebaseGameRef.child(game.getKey()).setValue(game);
+            showAppropriateToast(successMessage);
         } else {
             Log.d("ItemAdapter","last participant has unregistered");
             remove(game,context);
         }
 
+    }
+
+    public void removeParticipantFromGameViaKey(String gameKey,String participantId){
+        Log.d("ItemAdapter","entered removeParticipantFromGameViaKey: " + gameKey + participantId);
+        Query participantQuery = firebaseGameRef.child(gameKey).child("participants").orderByValue().equalTo(participantId);
+        Log.d("ItemAdapter","Query: " + participantQuery);
+
+        participantQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot myParticipantSnapshot: dataSnapshot.getChildren()){
+                    Log.d("ItemAdapter","myParticipantSnaphshot: " + myParticipantSnapshot.toString());
+                    myParticipantSnapshot.getRef().removeValue();
+                    //showAppropriateToast();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("ItemAdapter","hmmmm");
+            }
+        });
     }
 
     private void sortGamesAccordingToActionBar() {
@@ -201,5 +232,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
     private void filterSignedInGamesAndSortByTime() {
 
+    }
+    private void showAppropriateToast(String successMessage) {
+        Toast.makeText(getContext(),successMessage,Toast.LENGTH_SHORT).show();
     }
 }
