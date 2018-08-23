@@ -90,6 +90,9 @@ public class Game implements Parcelable{
     public String getGameName(){
         return gameName;
     }
+    public String getGameDate() {
+        return gameDate;
+    }
     public String getGameTime() {
         return gameTime;
     }
@@ -144,18 +147,12 @@ public class Game implements Parcelable{
         this.participants = updatedGame.participants;
         //this.key = updatedGame.key;
     }
-    public String getDate() {
-        return gameDate;
-    }
 
-    public void setDate(String date) {
-        this.gameDate = date;
-    }
     //http://www.vogella.com/tutorials/AndroidParcelable/article.html#using-auto-value-to-generate-parcelable-implementations
     public Game(Parcel in){
         this.gameName = in.readString();
-        this.gameTime = in.readString();
         this.gameDate =  in.readString();
+        this.gameTime = in.readString();
         this.gameLat = in.readDouble();
         this.gameLong = in.readDouble();
         //this.gameLocation = in.readParcelable(Location.class.getClassLoader());

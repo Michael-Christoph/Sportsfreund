@@ -69,7 +69,7 @@ public class SportsfreundNotificationManager {
                     .setStyle(bigTextStyle)
                     .addAction(new NotificationCompat.Action(R.drawable.ic_person_green_24dp,textParticipate,pendingIntentParticipate))
                     .addAction(new NotificationCompat.Action(R.drawable.ic_person_red_24dp,textUnregister,pendingIntentUnregister))
-                    .setVibrate(new long[]{1000,1000})
+                    .setVibrate(new long[]{0,1000})
                     .setAutoCancel(true)
                     .setOngoing(false);
 

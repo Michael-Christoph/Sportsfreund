@@ -101,9 +101,9 @@ public class SignInActivity extends AppCompatActivity {
                                 Toast.makeText(SignInActivity.this, getString(R.string.login_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            if (!MyFirebaseMessagingService.mostRecentTokenSavedInDatabase){
+                            //if (!MyFirebaseMessagingService.mostRecentTokenSavedInDatabase){
                                 MyFirebaseMessagingService.sendTokenToDatabase(auth.getCurrentUser());
-                            }
+                            //}
                             finish();
                         }
                     }

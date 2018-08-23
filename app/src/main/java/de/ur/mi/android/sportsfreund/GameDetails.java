@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,13 +20,16 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class GameDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView type,time,date,description,desTitle;
+    TextView type,time,date,textViewParticipants;
+    private String participantsString = "";
     Button showLocation;
-    Button participate;
-    Button resign;
-    ListView listView;
+    Button buttonParticipate;
+    Button buttonResign;
+    //ListView listView;
 
     private ItemAdapter_neu itemAdapter;
     private Game game;
@@ -38,9 +43,6 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
     private ActionBarDrawerToggle mToggle;
 
     private String toastParticipantRemoved = "Du bist jetzt von dem Spiel abgemeldet";
-
-
-
 
 
     @Override
@@ -74,75 +76,98 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
     private void setup()  {
         Intent intent = getIntent();
         game = intent.getParcelableExtra("game");
+        Log.d("GameDetails","gameName: " + game.getGameName());
+        Log.d("GameDetails","gameDate: " + game.getGameDate());
+        Log.d("GameDetails","gameTime: " + game.getGameTime());
         type = findViewById(R.id.title);
         type.setText(game.getGameName());
         time = findViewById(R.id.time);
         time.setText(game.getGameTime());
         date = findViewById(R.id.date);
-        date.setText(game.getDate());
+        date.setText(game.getGameDate());
 
+        textViewParticipants = findViewById(R.id.participants);
+        String addYou = "";
+        for (String participantId: game.getParticipants()){
+            /*
+            if (participantId.equals(auth.getCurrentUser().getUid())){
+                addYou = " und du!";
+            } else {
+            */
+                participantsString += "\u26F9";
+            //}
+        }
+        if (!addYou.equals("")){
+            participantsString += addYou;
+        }
+        textViewParticipants.setText(participantsString);
 
-
-        showLocation = findViewById(R.id.showOnMaps);
-
+        /*
+        listView = findViewById(R.id.gameDetails_listView);
         TextView headerView = new TextView(getApplicationContext());
-        headerView.setText(R.string.participants);
+        headerView.setText(R.string.gameDetails_participantsHeader);
         headerView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+        headerView.setTextColor(getResources().getColor(R.color.common_google_signin_btn_text_light));
         headerView.setAllCaps(true);
+        headerView.setGravity(Gravity.CENTER);
+        listView.addHeaderView(headerView);
+        ArrayList<String> participantsForAdapter = new ArrayList<>();
+        for (String participantId: game.getParticipants()){
+            String newParticipantId = participantId;
+            if (participantId.equals(auth.getCurrentUser().getUid())){
+                newParticipantId = getString(R.string.gameDetails_participantYou);
+            }
+            participantsForAdapter.add(newParticipantId);
+        }
+        ArrayAdapter<String> aa = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,
+                android.R.id.text1,participantsForAdapter);
+        listView.setAdapter(aa);
+        */
 
 
         setupParticipateAndResignButtons();
 
-        //time.setText(getIntent().getStringExtra("title"));
-        //date.setText(getIntent().getStringExtra("body"));
+        showLocation = findViewById(R.id.showOnMaps);
+        showLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationOnMaps();
+
+            }
+        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        showLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLocationonMaps ();
-
-            }
-        });
-
-
-
     }
 
-    private void showLocationonMaps() {
-            Intent showGameLocation = new Intent(this, MapsActivity.class);
-
+    private void showLocationOnMaps() {
+        Intent showGameLocation = new Intent(this, MapsActivity.class);
         double locLong = game.getGameLong();
         double locLat = game.getGameLat();
-
         showGameLocation.putExtra(KEY_LOCATION_LAT_D, locLat);
         showGameLocation.putExtra( KEY_LOCATION_LONG_D, locLong );
         showGameLocation.putExtra( KEY_GAME_NAME, game.getGameName() );
-
-            startActivity(showGameLocation);
-
+        startActivity(showGameLocation);
     }
 
     private void setupParticipateAndResignButtons(){
-        participate = findViewById(R.id.button_participate);
-
-        participate.setOnClickListener(new View.OnClickListener() {
+        buttonParticipate = findViewById(R.id.button_participate);
+        buttonParticipate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseUser user = auth.getCurrentUser();
                 if (user == null){
-                    Log.d("bla","participate clicked, no user found ");
+                    Log.d("bla","buttonParticipate clicked, no user found ");
                     startActivity(new Intent(GameDetails.this,SignUpActivity.class));
                 } else {
                     if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
-                        Log.d("bla","participate-onClick-else-if: should never get to this place");
+                        Log.d("bla","buttonParticipate-onClick-else-if: should never get to this place");
                     } else {
                         itemAdapter.addParticipantToGame(game,user.getUid(), getApplicationContext());
-                        Log.d("bla","participate clicked, user found, id: " + user.getUid());
-                        participate.setEnabled(false);
+                        Log.d("bla","buttonParticipate clicked, user found, id: " + user.getUid());
+                        buttonParticipate.setEnabled(false);
                         MainActivity.setAllGamesIsCurrentView(false);
                         startActivity(new Intent(GameDetails.this,MainActivity.class));
                     }
@@ -150,20 +175,19 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
             }
         });
 
-        resign = findViewById(R.id.button_resign);
-
-        resign.setOnClickListener(new View.OnClickListener() {
+        buttonResign = findViewById(R.id.button_resign);
+        buttonResign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseUser user = auth.getCurrentUser();
                 if (user == null){
-                    Log.d("bla","resign clicked, no user found");
+                    Log.d("bla","buttonResign clicked, no user found");
                     startActivity(new Intent(GameDetails.this,SignUpActivity.class));
                 } else {
                     if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
                         itemAdapter.removeParticipantFromGame(game,user.getUid(), getApplicationContext(),toastParticipantRemoved);
-                        Log.d("bla","resign clicked, user found, id: " + user.getUid());
-                        resign.setEnabled(false);
+                        Log.d("bla","buttonResign clicked, user found, id: " + user.getUid());
+                        buttonResign.setEnabled(false);
                         MainActivity.setAllGamesIsCurrentView(false);
                         startActivity(new Intent(GameDetails.this,MainActivity.class));
                     } else {
@@ -181,14 +205,14 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                 if (auth.getCurrentUser() != null){
                     //if user has already signed up for this game
                     if (game.getParticipants().contains(auth.getCurrentUser().getUid())){
-                        participate.setEnabled(false);
+                        buttonParticipate.setEnabled(false);
 
                     } else {
-                        resign.setEnabled(false);
+                        buttonResign.setEnabled(false);
                     }
                 } else {
-                    participate.setEnabled(true);
-                    resign.setEnabled(true);
+                    buttonParticipate.setEnabled(true);
+                    buttonResign.setEnabled(true);
                 }
             }
         });
@@ -213,7 +237,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         }
 
         if (id == R.id.newGame)  {
-            openActivity(NewGame.class);
+            openActivity(NewGameActivity.class);
         }
         return false;
     }

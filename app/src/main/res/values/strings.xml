@@ -2,6 +2,9 @@
     <string name="app_name">Sportsfreund</string>
     <string name="back">Zurück</string>
     <string name="main_message">Aktivitäten in deiner Nähe:</string>
+    <string name="drawer_account">Profil</string>
+    <string name="drawer_debugActivity">DebugHelper</string>
+    <string name="drawer_simulation">SIMULATION</string>
     <string name="account_text">Du bist momentan mit folgender Mailadresse angemeldet:</string>
     <string name="sign_out">Abmelden</string>
     <string name="email">Email</string>
@@ -21,7 +24,7 @@
     <string name="send_mail_successful">Wir haben dir gerade Anweisungen zum Zurücksetzen deines Passworts geschickt.</string>
     <string name="registration_button">Registrieren</string>
     <string name="login_failed">Die Anmeldung hat nicht funktioniert, bitte prüfe nochmals Email und Passwort!</string>
-    <string name="games_signd_in">Angemeldete Spiele</string>
+    <string name="games_signed_in">Meine nächsten Spiele</string>
     <string name="games_nearby">Spiele in der Umgebung</string>
     <string name="new_game">Neues Spiel</string>
     <string name="make_new_game">Spiel erstellen</string>
@@ -35,7 +38,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="no_ned">noch nicht gesetz</string>
     <string name="db_game_node">games</string>
-    <string name="participants">Teilnehmer:</string>
+    <string name="gameDetails_participantsHeader">Teilnehmer:</string>
+    <string name="gameDetails_participantYou">du selbst</string>
     <string name="button_participate">Teilnehmen</string>
     <string name="button_resign">Absagen</string>
     <string name="participant_already_added">Du bist bereits für das Spiel angemeldet!</string>
@@ -46,10 +50,10 @@
     <string name="gps_title">Achtung</string>
     <string name="positive_button_text">Erlauben</string>
     <string name="negative_button_text">Weiter ohne GPS</string>
-    <string name="local_games">local games</string>
-    <string name="my_games">my games</string>
     <string name="toast_game_added">Spiel wurde erstellt!</string>
     <string name="toast_add_game_failed">Sorry, dein Spiel konnte nicht erstellt werden. Bitte versuche es später noch einmal!</string>
+    <string name="toast_removedRandomParticipant">Der zufällige Teilnehmer wurde vom Spiel abgemeldet</string>
+    <string name="toast_removedYou">Okay, du wurdest soeben abgemeldet</string>
     <string name="title_maps_instruction">Anleitung</string>
     <string name="ok">OK</string>
     <string name="text_maps_instruction">Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen</string>
@@ -64,11 +68,15 @@
     <string name="title_activity_simulation">SimulationActivity</string>
 
     <string name="simulation_explanation">Liebe Korrektoren, nutzen Sie bitte diese Activity, um ohne ein zweites Android-Gerät unser Push-Notification-Feature zu testen.</string>
-    <string name="simulation_addTestGame">Spiel \'Testspiel\' erstellen</string>
+    <string name="simulation_addTestGame">Spiel \'Testspiel\' mit einem Test-Teilnehmer erstellen</string>
+    <string name="simulation_testuserid">testuser_id</string>
+    <string name="testgame_name">Testspiel</string>
     <string name="simulation_addParticipant">Mich zum Spiel \'Testspiel\' hinzufügen</string>
     <string name="simulation_explanation_2">Wenn Sie jetzt einen der beiden folgenden Buttons drücken, sollten Sie eine Notification erhalten. Bitte beachten Sie, dass keine sonstigen Notifications auf Ihrem Gerät offen sind, sonst sind die Interaktions-Buttons nicht sichtbar!</string>
-    <string name="simulation_addRandomParticipant">Zufälligen Teilnehmer zum Spiel \'Testspiel\' hinzufügen</string>
-    <string name="simulation_removeRandomParticipant">Zufälligen Teilnehmer vom Spiel \'Testspiel\' entfernen</string>
+    <string name="simulation_addRandomParticipant">Weiteren Test-Teilnehmer zum Spiel \'Testspiel\' hinzufügen</string>
+    <string name="simulation_testuserid2">testuser2_id</string>
+    <string name="simulation_removeRandomParticipant">Test-Teilnehmer vom Spiel \'Testspiel\' entfernen</string>
+    <string name="simulation_finish">Simulation beenden</string>
 
 
 </resources>

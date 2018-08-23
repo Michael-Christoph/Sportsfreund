@@ -1,17 +1,11 @@
 package de.ur.mi.android.sportsfreund;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -24,8 +18,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static com.google.android.gms.maps.GoogleMap.*;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -120,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void goBackToNewGame () {
 
-            Intent result = new Intent( this, NewGame.class );
+            Intent result = new Intent( this, NewGameActivity.class );
 
 
             double locLong = newLocation.longitude;

@@ -1,5 +1,6 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -30,7 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
 
-public class NewGame extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class NewGameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
     private EditText inputGame;
     private static Button inputTime;
     private static Button inputDate;
@@ -55,6 +57,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
+    private android.support.v7.app.ActionBar actionBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
@@ -63,6 +66,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.games_nearby);
         mAuth = FirebaseAuth.getInstance();
 
         currentUser = mAuth.getCurrentUser();
@@ -106,7 +111,7 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
         inputTime.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog( v );
+                showTimePickerDialog(v);
             }
         } );
     }
@@ -226,8 +231,8 @@ public class NewGame extends AppCompatActivity implements NavigationView.OnNavig
             makeGameButton.setEnabled( true );
             mapButton.setText( "Ort festgelegt, über GoogleMaps ändern?"  );
             if (locLat != 0){
-                Log.d("NewGame","LocLat: " + locLat);
-                Log.d("NewGame", "LocLong" + locLong);
+                Log.d("NewGameActivity","LocLat: " + locLat);
+                Log.d("NewGameActivity", "LocLong" + locLong);
             }
     }}}
 

@@ -96,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         String token = task.getResult().getToken();
                         Log.d("FirebaseMessaging", "Token: " + token);
                         firebaseUsersRef.child(userId).setValue(token);
-                        mostRecentTokenSavedInDatabase = true;
+                        //mostRecentTokenSavedInDatabase = true;
                     }
                 });
 

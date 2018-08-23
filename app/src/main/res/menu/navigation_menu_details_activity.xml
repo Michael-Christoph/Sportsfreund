@@ -4,15 +4,15 @@
 
     <item
         android:id="@+id/newGame"
-        android:title="Neues Spiel"
+        android:title="@string/new_game"
         android:icon="@drawable/ic_add_black_24dp"/>
 
     <item android:id="@+id/games"
-        android:title="Spiele Übersicht"
+        android:title="@string/games_nearby"
         android:icon="@drawable/ic_my_location_black_24dp"/>
 
     <item android:id="@+id/account"
-        android:title="Account"
+        android:title="@string/drawer_account"
         android:icon="@drawable/ic_person_black_24dp"/>
 
 

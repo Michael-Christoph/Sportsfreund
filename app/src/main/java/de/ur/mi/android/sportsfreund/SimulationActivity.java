@@ -14,10 +14,12 @@ import com.google.firebase.auth.FirebaseUser;
 public class SimulationActivity extends AppCompatActivity {
 
     TextView textView1,textView2;
-    Button btn1,btn2,btn3,btn4;
+    Button btn1,btn2,btn3,btn4,btn5;
     ItemAdapter_neu itemAdapter;
 
     Game testGame;
+
+    public static final String LOG_TAG = "SimulationActivity";
 
 
     @Override
@@ -60,12 +62,19 @@ public class SimulationActivity extends AppCompatActivity {
             }
         });
         btn4.setEnabled(false);
+        btn5 = findViewById(R.id.simulation_button_5);
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
     private void onBtn1Clicked(){
         Log.d("Simulation: ","entered onBtn1Clicked");
         //testGame is furthest away from German user with respect to date and time
-        Game testGame = new Game(getApplicationContext(),"Testspiel","4242-11-11","23:59",-45.902796,-177.323183,"testuserid");
+        Game testGame = new Game(getApplicationContext(),getString(R.string.testgame_name),"4242-11-11","23:59",-45.902796,-177.323183,"testuserid");
         Log.d("Simulation: ","testGame = " + testGame.getGameName());
         itemAdapter.addGameToDatabase(testGame,getApplicationContext());
         btn2.setEnabled(true);
@@ -76,27 +85,51 @@ public class SimulationActivity extends AppCompatActivity {
         if (user == null){
             startActivity(new Intent(getApplicationContext(),SignUpActivity.class));
         } else {
-            testGame = itemAdapter.getItem(0);
-            itemAdapter.addParticipantToGame(testGame,user.getUid(),getApplicationContext());
-            textView2.setText(getString(R.string.simulation_explanation_2));
-            btn2.setEnabled(false);
-            btn3.setEnabled(true);
+            int i = 0;
+            int numGamesInDatabase = itemAdapter.getGamesInDatabase().size();
+            Log.d(LOG_TAG,"numGamesInDatabase: " + numGamesInDatabase);
+            //in order to refill itemAdapter with all games in database
+            MainActivity.setAllGamesIsCurrentView(true);
+            while (i < numGamesInDatabase){
+                Game game = itemAdapter.getItem(i);
+                if (game.getGameName().equals(getString(R.string.testgame_name))){
+                    testGame = game;
+                    break;
+                } else {
+                    i++;
+                }
+            }
+
+            if (testGame != null) {
+                itemAdapter.addParticipantToGame(testGame, user.getUid(), getApplicationContext());
+                textView2.setText(getString(R.string.simulation_explanation_2));
+                btn2.setEnabled(false);
+                btn3.setEnabled(true);
+                btn4.setEnabled(true);
+            } else {
+                Log.d(LOG_TAG,"testGame is null!");
+            }
 
         }
 
     }
     private void onBtn3Clicked(){
-        itemAdapter.addParticipantToGame(testGame,"testuserid2",getApplicationContext());
+        itemAdapter.addParticipantToGame(testGame,getString(R.string.simulation_testuserid2),getApplicationContext());
         btn3.setEnabled(false);
-        btn4.setEnabled(true);
+        btn4.setEnabled(false);
     }
     private void onBtn4Clicked(){
-        itemAdapter.removeParticipantFromGame(testGame,"testuserid2",getApplicationContext(),"Der zufällige Teilnehmer wurde vom Spiel abgemeldet");
+        itemAdapter.removeParticipantFromGame(testGame,getString(R.string.simulation_testuserid),getApplicationContext(),getString(R.string.toast_removedRandomParticipant));
+        btn3.setEnabled(false);
         btn4.setEnabled(false);
     }
     @Override
     public void finish(){
-        itemAdapter.remove(testGame,getApplicationContext());
+        if (testGame != null){
+            itemAdapter.remove(testGame,getApplicationContext());
+        } else {
+            itemAdapter.removeGamesViaName(getString(R.string.testgame_name),getApplicationContext());
+        }
         super.finish();
     }
 

@@ -52,7 +52,7 @@ public class AddGameAsyncTask extends AsyncTask<Game,Integer,Boolean> {
         dialogBuilder.setPositiveButton(positiveButton, new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Intent intent = new Intent(AddGameAsyncTask.this,NewGame.class);
+                //Intent intent = new Intent(AddGameAsyncTask.this,NewGameActivity.class);
             }
         });
         dialogBuilder.setNegativeButton(negativeButton,new Dialog.OnClickListener(){

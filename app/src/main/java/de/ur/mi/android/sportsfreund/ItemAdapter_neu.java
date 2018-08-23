@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +31,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
     private ArrayList<Game> gamesInDatabase;
     private ArrayList<Game> gamesForCurrentView;
+    private ArrayList<Game> gamesWithCurrentUser;
     private DatabaseReference firebaseGameRef;
 
     /*
@@ -38,15 +41,19 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     */
     private String toastGameDeleted = "Spiel wurde gelöscht: ";
 
+    private static final String LOG_TAG = "ItemAdapter";
+
 
     public ItemAdapter_neu(Context context, ArrayList<Game> gamesForCurrentView) {
         //super(context, R.layout.list_item,items);
         //super(context,0,items);
 
         super(context, 0, gamesForCurrentView);
+
         this.gamesForCurrentView = gamesForCurrentView;
         gamesInDatabase = new ArrayList<>();
-        firebaseGameRef = FirebaseDatabase.getInstance().getReference().child("games");
+        gamesWithCurrentUser = new ArrayList<>();
+        firebaseGameRef = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_GAMES_NODE);
         //MP: adds offline persistence even if app is destroyed.
         firebaseGameRef.keepSynced(true);
         firebaseGameRef.addChildEventListener(new GamesChildEventListener());
@@ -61,7 +68,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
 
         Game gameToView = getItem(position);
         String title = gameToView.getGameName();
-        String body = "Zeit: " + gameToView.getDate() + ", " + gameToView.getGameTime() + " Uhr";
+        String body = "Zeit: " + gameToView.getGameDate() + ", " + gameToView.getGameTime() + " Uhr";
         String body2;
         if (gameToView.distanceToGame(getContext()) == null){
             body2 = "Entfernung kann ohne GPS nicht angezeigt werden!";
@@ -92,11 +99,13 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             Game game = dataSnapshot.getValue(Game.class);
             game.setKey(dataSnapshot.getKey());
-            gamesForCurrentView.add(0, game);
-            sortGamesAccordingToActionBar();
-            notifyDataSetChanged();
+            gamesInDatabase.add(0,game);
+            //gamesForCurrentView.add(0, game);
+            renewViewAccordingToActionBar();
+            //notifyDataSetChanged();
         }
 
+        //in our case, this only concerns added/removed participants
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String key = dataSnapshot.getKey();
@@ -105,23 +114,25 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             if (updatedGame.getParticipants().size() == 0){
                 remove(updatedGame,getContext());
             } else {
-                for (Game game : gamesForCurrentView) {
+                //for (Game game : gamesForCurrentView) {
+                for (Game game: gamesInDatabase){
                     if (game.getKey().equals(key)) {
                         game.setValues(updatedGame);
-                        //notifyDataSetChanged();
+                        renewViewAccordingToActionBar();
                     }
                 }
             }
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
         }
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
-            for (Game game : gamesForCurrentView) {
+            for (Game game : gamesInDatabase) {
                 if (game.getKey().equals(key)) {
-                    gamesForCurrentView.remove(game);
-                    notifyDataSetChanged();
+                    gamesInDatabase.remove(game);
+                    renewViewAccordingToActionBar();
+                    //notifyDataSetChanged();
                     return;
                 }
             }
@@ -139,7 +150,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     }
 
     public void addGameToDatabase(Game game, final Context context) {
-        Log.d("ItemAdapter: ","entered addGameToDatabase-method");
+        Log.d(LOG_TAG,"entered addGameToDatabase-method");
         firebaseGameRef.push().setValue(game, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -153,62 +164,99 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     }
 
     public void remove(Game game, Context context) {
-        firebaseGameRef.child(game.getKey()).removeValue();
-        Toast.makeText(context, toastGameDeleted + game.getGameName(),Toast.LENGTH_SHORT).show();
+        if (game != null){
+            firebaseGameRef.child(game.getKey()).removeValue();
+            Toast.makeText(context, toastGameDeleted + game.getGameName(),Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d(LOG_TAG,"game is null, no game removed");
+        }
+    }
+    public void removeGamesViaName(String gameName,Context context){
+        for (Game gameInDatabase: gamesInDatabase){
+            if (gameInDatabase.getGameName().equals(gameName)){
+                remove(gameInDatabase,context);
+            }
+        }
     }
 
     public void addParticipantToGame(Game game, String participantId, Context context) {
+        Log.d(LOG_TAG,"gameKey vor addPart: " + game.getKey().toString() );
+        Log.d(LOG_TAG,"gameName vor addPart: " + game.getGameName());
+        Log.d(LOG_TAG,"gameDate vor addPart: " + game.getGameDate());
+        Log.d(LOG_TAG,"gameTime vor addPart: " + game.getGameTime());
         game.addParticipant(participantId, context);
-        Log.d("ItemAdapter","game.getKey() ist wohl null? " + game.getKey().toString() );
+        Log.d(LOG_TAG,"gameKey: " + game.getKey().toString() );
+        Log.d(LOG_TAG,"gameName: " + game.getGameName());
+        Log.d(LOG_TAG,"gameDate: " + game.getGameDate());
+        Log.d(LOG_TAG,"gameTime: " + game.getGameTime());
         firebaseGameRef.child(game.getKey()).setValue(game);
     }
 
     public void removeParticipantFromGame(Game game, String participantId, Context context,String successMessage) {
         game.removeParticipant(participantId, context);
         if (game.getParticipants().size() > 0){
-            Log.d("ItemAdapter","still participants left");
+            Log.d(LOG_TAG,"still participants left");
             firebaseGameRef.child(game.getKey()).setValue(game);
-            showAppropriateToast(successMessage);
+            showAppropriateToast(context,successMessage);
         } else {
-            Log.d("ItemAdapter","last participant has unregistered");
+            Log.d(LOG_TAG,"last participant has unregistered");
             remove(game,context);
         }
-
     }
 
-    public void removeParticipantFromGameViaKey(String gameKey,String participantId){
-        Log.d("ItemAdapter","entered removeParticipantFromGameViaKey: " + gameKey + participantId);
+    public void removeParticipantFromGameViaKey(String gameKey, String participantId, final Context contextForToast, final String successMessage){
+        Log.d(LOG_TAG,"entered removeParticipantFromGameViaKey: " + gameKey + participantId);
         Query participantQuery = firebaseGameRef.child(gameKey).child("participants").orderByValue().equalTo(participantId);
-        Log.d("ItemAdapter","Query: " + participantQuery);
+        Log.d(LOG_TAG,"Query: " + participantQuery);
 
         participantQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot myParticipantSnapshot: dataSnapshot.getChildren()){
-                    Log.d("ItemAdapter","myParticipantSnaphshot: " + myParticipantSnapshot.toString());
+                    Log.d(LOG_TAG,"myParticipantSnaphshot: " + myParticipantSnapshot.toString());
                     myParticipantSnapshot.getRef().removeValue();
-                    //showAppropriateToast();
+                    showAppropriateToast(contextForToast,successMessage);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("ItemAdapter","hmmmm");
+                Log.d(LOG_TAG,"An error occurred: " + databaseError.toString());
             }
         });
     }
 
-    private void sortGamesAccordingToActionBar() {
+    public void renewViewAccordingToActionBar() {
         if (MainActivity.allGamesIsCurrentView()) {
             sortGamesFromDatabaseByProximity();
-            //if current view is "signed in games" only
+        //if current view is "signed in games" only
         } else {
             filterSignedInGamesAndSortByTime();
         }
+        notifyDataSetChanged();
     }
 
-    private void sortGamesFromDatabaseByProximity() {
+    public void sortGamesFromDatabaseByProximity() {
+        gamesForCurrentView.clear();
+        gamesForCurrentView.addAll((ArrayList<Game>) gamesInDatabase.clone());
+        if (gamesForCurrentView.size() >= 2 && gamesForCurrentView.get(0).distanceToGame(getContext()) != null){
+            Collections.sort(gamesForCurrentView, new Comparator<Game>() {
+                @Override
+                public int compare(Game game, Game t1) {
+                    Float proximityGame = game.distanceToGame(getContext());
+                    Float proximityT1 = t1.distanceToGame(getContext());
+                    if (proximityGame == null || proximityT1 == null){
+                        return 0;
+                    }
+                    int comparisonResult = Float.compare(proximityGame,proximityT1);
+                    return comparisonResult;
+                }
+            });
+        } else {
+            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2 oder distanceToGame liefert null.");
 
+        }
+
+        /*
         if (gamesForCurrentView.size() >= 2 &&
                 gamesForCurrentView.get(0).distanceToGame(getContext()) != null) {
             // Sortieren der Spiele aus Firebase
@@ -225,15 +273,48 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             Log.d("bla", "gamesForCurrentView nach sort: " + gamesForCurrentView.toString());
             //notifyDataSetChanged();
         } else {
-            Log.d("ItemAdapter","gamesForCurrentView ist kleiner 2 oder distanceToGame liefert null.");
+            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2 oder distanceToGame liefert null.");
+        }
+        */
+
+    }
+
+    public void filterSignedInGamesAndSortByTime() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        gamesWithCurrentUser.clear();
+
+        for (Game gameInDatabase: gamesInDatabase){
+            if (gameInDatabase.getParticipants().contains(currentUser.getUid())){
+                gamesWithCurrentUser.add(gameInDatabase);
+            }
+        }
+        if (gamesWithCurrentUser.size() >= 2){
+            Collections.sort(gamesWithCurrentUser, new Comparator<Game>() {
+                @Override
+                public int compare(Game game, Game t1) {
+                    String gameDate = game.getGameDate();
+                    String t1Date = t1.getGameDate();
+                    int comparisonResult = gameDate.compareTo(t1Date);
+                    if (comparisonResult == 0){
+                        String gameTime = game.getGameTime();
+                        String t1Time = t1.getGameTime();
+                        comparisonResult = gameTime.compareTo(t1Time);
+                    }
+                    return comparisonResult;
+                }
+            });
+        } else {
+            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2.");
         }
 
-    }
+        gamesForCurrentView.clear();
+        gamesForCurrentView.addAll((ArrayList<Game>) gamesWithCurrentUser.clone());
 
-    private void filterSignedInGamesAndSortByTime() {
-
     }
-    private void showAppropriateToast(String successMessage) {
-        Toast.makeText(getContext(),successMessage,Toast.LENGTH_SHORT).show();
+    private void showAppropriateToast(Context context,String successMessage) {
+        Toast.makeText(context,successMessage,Toast.LENGTH_SHORT).show();
+    }
+    public ArrayList<Game> getGamesInDatabase() {
+        return gamesInDatabase;
     }
 }

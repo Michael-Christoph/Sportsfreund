@@ -18,7 +18,7 @@ public class NotificationInteractionReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.d("Receiver","action: " + action);
         if (action.equals(context.getString(R.string.ACTION_PARTICIPATE))){
-            Log.d("Receiver","pressed participate");
+            Log.d("Receiver","pressed buttonParticipate");
             Toast.makeText(context,R.string.toastThanksForFeedback,Toast.LENGTH_SHORT).show();
         } else if (action.equals(context.getString(R.string.ACTION_UNREGISTER_FROM_GAME))){
             Log.d("Receiver","pressed unregister");
@@ -28,7 +28,7 @@ public class NotificationInteractionReceiver extends BroadcastReceiver {
             Log.d("Receiver","gameKey: " + gameKey);
             auth = FirebaseAuth.getInstance();
             if (auth.getCurrentUser() != null){
-                MainActivity.getItemAdapter().removeParticipantFromGameViaKey(gameKey,auth.getCurrentUser().getUid());
+                MainActivity.getItemAdapter().removeParticipantFromGameViaKey(gameKey,auth.getCurrentUser().getUid(),context,context.getString(R.string.toast_removedYou));
             } else {
                 Log.d("Receiver","user is null");
                 //Alert, dass leider keine Abmeldung möglich; User möge sich bitte zuerst anmelden
