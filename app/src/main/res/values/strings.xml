@@ -65,6 +65,7 @@
     <string name="ACTION_UNREGISTER_FROM_GAME">de.ur.mi.android.sportsfreund.UNREGISTER_FROM_GAME</string>
     <string name="ACTION_PARTICIPATE">de.ur.mi.android.sportsfreund.PARTICIPATE</string>
     <string name="toastThanksForFeedback">Deine SPORTSFREUNDe sagen Danke für dein Feedback!</string>
+    <string name="toast_enterFutureDateTime">Bitte wähle für das Spiel einen Zeitpunkt, der in der Zukunft liegt!</string>
     <string name="title_activity_simulation">SimulationActivity</string>
 
     <string name="simulation_explanation">Liebe Korrektoren, nutzen Sie bitte diese Activity, um ohne ein zweites Android-Gerät unser Push-Notification-Feature zu testen.</string>

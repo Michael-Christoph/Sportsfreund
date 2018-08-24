@@ -33,6 +33,8 @@ import java.util.Calendar;
 
 public class NewGameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    private static final String LOG_TAG = "NewGameActivity";
+
     private EditText inputGame;
     private static Button inputTime;
     private static Button inputDate;
@@ -143,27 +145,57 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
     private void makeNewGame() {
         if (inputGame.getText().toString().isEmpty()) {
-            Toast.makeText( getApplicationContext(), "Bitte gib einen Namen für das Spiel an!", Toast.LENGTH_SHORT ).show();
+            Toast.makeText(getApplicationContext(), "Bitte gib einen Namen für das Spiel an!", Toast.LENGTH_SHORT).show();
+        } else if (dateTimeIsHistory()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.toast_enterFutureDateTime), Toast.LENGTH_SHORT).show();
+        } else if (mAuth.getCurrentUser() == null) {
+            Intent i = new Intent(this, SignUpActivity.class);
+            startActivity(i);
         } else {
-            currentUser = mAuth.getCurrentUser();
-            if (currentUser == null) {
-                Intent i = new Intent( this, SignUpActivity.class );
-                startActivity( i );
+            String gameName = inputGame.getText().toString();
+
+            Game game = new Game(getApplicationContext(), gameName, gameDate, gameTime, locLat, locLong, currentUser.getUid());
+            itemAdapter.addGameToDatabase(game, this);
+            MainActivity.setAllGamesIsCurrentView(false);
+            Intent backToMainWithMyGames = new Intent(this, MainActivity.class);
+            startActivity(backToMainWithMyGames);
+        }
+    }
+
+    private Boolean dateTimeIsHistory(){
+        final Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH) + 1;
+        String currentMonthString = Integer.toString(currentMonth);
+        if (currentMonth < 10){
+            currentMonthString = "0" + currentMonthString;
+        }
+        String currentDate = c.get(Calendar.YEAR) + "-" + currentMonthString + "-" + c.get(Calendar.DAY_OF_MONTH);
+        Log.d(LOG_TAG,"currentDate: " + currentDate);
+        if (gameDate.compareTo(currentDate) < 0){
+            return true;
+        } else if (gameDate.compareTo(currentDate) > 0){
+            return false;
+        } else {
+            int currentHour = c.get(Calendar.HOUR_OF_DAY);
+            int currentMinute = c.get(Calendar.MINUTE);
+            String hourString = Integer.toString(currentHour);
+            if (currentHour < 10){
+                hourString = "0" + hourString;
+            }
+            String minuteString = Integer.toString(currentMinute);
+            if (currentMinute < 10){
+                minuteString = "0" + minuteString;
+            }
+            String currentTimeString = hourString + ":" + minuteString;
+            Log.d(LOG_TAG,"currentTimeString: " + currentTimeString);
+
+            if (gameTime.compareTo(currentTimeString) <= 0){
+                return true;
             } else {
-                String gameName = inputGame.getText().toString();
-
-                Game game = new Game( getApplicationContext(), gameName, gameDate, gameTime, locLat, locLong, currentUser.getUid() );
-                //Game game = new Game(gameName,gameTime,gameLocation,"testid");
-
-                //addGameToDatabase(game);
-                itemAdapter.addGameToDatabase( game, this );
-                MainActivity.setAllGamesIsCurrentView( false );
-                Intent backToMainWithMyGames = new Intent( this, MainActivity.class );
-                startActivity( backToMainWithMyGames );
-
-                //RealtimeDbAdapter.addGame(game);
+                return false;
             }
         }
+
     }
 
     /*
@@ -315,7 +347,7 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
             // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH) + 1;
+            int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
@@ -324,9 +356,10 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             String yearAsString = Integer.toString(year);
-            String monthAsString = Integer.toString(month);
+            //january is represented with 0, therefore +1
+            String monthAsString = Integer.toString(month + 1);
             String dayAsString = Integer.toString(day);
-            if (month < 10){
+            if (month < 9){
                 monthAsString = "0" + monthAsString;
             }
             if (day < 10){
