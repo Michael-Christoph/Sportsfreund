@@ -74,7 +74,7 @@ public class SimulationActivity extends AppCompatActivity {
     private void onBtn1Clicked(){
         Log.d("Simulation: ","entered onBtn1Clicked");
         //testGame is furthest away from German user with respect to date and time
-        Game testGame = new Game(getApplicationContext(),getString(R.string.testgame_name),"4242-11-11","23:59",-45.902796,-177.323183,"testuserid");
+        Game testGame = new Game(getApplicationContext(),getString(R.string.testgame_name),"4242-11-11","23:59",-45.902796,-177.323183,getString(R.string.simulation_testuserid));
         Log.d("Simulation: ","testGame = " + testGame.getGameName());
         itemAdapter.addGameToDatabase(testGame,getApplicationContext());
         btn2.setEnabled(true);
