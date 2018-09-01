@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -40,10 +39,7 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     private static Button inputDate;
     Button makeGameButton;
     Button mapButton;
-    private TextView locationSet;
     final int REQUEST_CODE = 1;
-    private Location gameLocation;
-    private String noLocation= "no Location found";
     public static final String KEY_LOCATION_LAT= "lKeyLat";
     public static final String KEY_LOCATION_LONG = "lKeyLong";
 
@@ -73,7 +69,7 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
         mAuth = FirebaseAuth.getInstance();
 
         currentUser = mAuth.getCurrentUser();
-        Log.d("bla","currentUser: " +currentUser);
+        Log.d(LOG_TAG,"currentUser: " +currentUser);
 
         inputGame = findViewById(R.id.input_name);
         inputDate = findViewById(R.id.input_date);
@@ -83,7 +79,6 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
         setupCreateGameButton();
         setupDateButton();
         setupTimeButton();
-        //setupTextView();
         itemAdapter = MainActivity.getItemAdapter();
 
         mDrawerLayout = findViewById(R.id.newGameDrawerLayout);
@@ -145,7 +140,7 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
     private void makeNewGame() {
         if (inputGame.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Bitte gib einen Namen für das Spiel an!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.toast_enterNameOfGame), Toast.LENGTH_SHORT).show();
         } else if (dateTimeIsHistory()) {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_enterFutureDateTime), Toast.LENGTH_SHORT).show();
         } else if (mAuth.getCurrentUser() == null) {
@@ -162,31 +157,16 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
         }
     }
 
+    //cf. method gameIsAlreadyOver in ItemAdapter class
     private Boolean dateTimeIsHistory(){
-        final Calendar c = Calendar.getInstance();
-        int currentMonth = c.get(Calendar.MONTH) + 1;
-        String currentMonthString = Integer.toString(currentMonth);
-        if (currentMonth < 10){
-            currentMonthString = "0" + currentMonthString;
-        }
-        String currentDate = c.get(Calendar.YEAR) + "-" + currentMonthString + "-" + c.get(Calendar.DAY_OF_MONTH);
+        String currentDate = SportsfreundHelper.getCurrentDateAsString();
         Log.d(LOG_TAG,"currentDate: " + currentDate);
         if (gameDate.compareTo(currentDate) < 0){
             return true;
         } else if (gameDate.compareTo(currentDate) > 0){
             return false;
         } else {
-            int currentHour = c.get(Calendar.HOUR_OF_DAY);
-            int currentMinute = c.get(Calendar.MINUTE);
-            String hourString = Integer.toString(currentHour);
-            if (currentHour < 10){
-                hourString = "0" + hourString;
-            }
-            String minuteString = Integer.toString(currentMinute);
-            if (currentMinute < 10){
-                minuteString = "0" + minuteString;
-            }
-            String currentTimeString = hourString + ":" + minuteString;
+            String currentTimeString = SportsfreundHelper.getCurrentTimeAsString();
             Log.d(LOG_TAG,"currentTimeString: " + currentTimeString);
 
             if (gameTime.compareTo(currentTimeString) <= 0){
@@ -198,45 +178,8 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
     }
 
-    /*
-    private void makeNewGame() {
-        String gameName = inputGame.getText().toString();
-        String gameTime = inputTime.getText().toString();
-        double gameLat = locLat;
-        double gameLong = locLong;
-        Game game = new Game(gameName,gameTime,gameLat,gameLong,uid);
-        new RealtimeSync().execute(game);
-
-    }
-    */
-    /*
-    private void addGameToDatabase(Game game){
-        DatabaseReference mDatabaseGames = FirebaseDatabase.getInstance().getReference("games");
-        String gameId = mDatabaseGames.push().getKey();
-        mDatabaseGames.child(gameId).setValue(game,new DatabaseReference.CompletionListener(){
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
-                if (databaseError != null){
-                    Toast.makeText(getApplicationContext(),toastAddGameFailed,Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),toastGameAdded,Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    */
-
-    /*
-    private void setupTextView() {
-
-        locationSet = findViewById( R.id.location_set );
-        locationSet.setText("dummy");
-    }
-    */
-
     private void setupMapButton(){
-        mapButton = (Button)findViewById(R.id.button_find_place);
-
+        mapButton = findViewById(R.id.button_find_place);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,32 +189,28 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     }
 
     private void changeToMapActivity() {
-
         Intent getLocation = new Intent(this, MapsActivity.class);
-
         startActivityForResult(getLocation,REQUEST_CODE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if(requestCode==REQUEST_CODE){
-        if(resultCode== Activity.RESULT_OK){
+        if (requestCode==REQUEST_CODE){
+            if (resultCode== Activity.RESULT_OK){
+                locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 1111111111);
+                locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 11111111);
 
-           Bundle extras = data.getExtras();
-            locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 1111111111);
-            locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 11111111);
-
-            makeGameButton.setEnabled( true );
-            mapButton.setText( "Ort festgelegt, über GoogleMaps ändern?"  );
-            if (locLat != 0){
-                Log.d("NewGameActivity","LocLat: " + locLat);
-                Log.d("NewGameActivity", "LocLong" + locLong);
+                makeGameButton.setEnabled( true );
+                mapButton.setText(getString(R.string.newGame_locationIsEntered));
+                if (locLat != 0){
+                    Log.d(LOG_TAG,"LocLat: " + locLat);
+                    Log.d(LOG_TAG,"LocLong" + locLong);
+                }
             }
-    }}}
-
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         int id = item.getItemId();
 
         if(id == R.id.account)  {
@@ -287,16 +226,15 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
         }
+
         return false;
     }
-
 
     public void showTimePickerDialog(View view) {
         DialogFragment newFragment = new TimePickerFragment();
         FragmentManager fragMan = getFragmentManager();
 
         newFragment.show(fragMan, "timePicker");
-
     }
 
     public void showDatePickerDialog(View v) {
@@ -305,7 +243,6 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
         newFragment.show(fragMan, "datePicker");
     }
-
 
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
@@ -334,10 +271,9 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
             }
 
             gameTime = stunden +":"+ minuten;
-            inputTime.setText( "Erledigt, Klicke um "+gameTime+ " Uhr zu ändern"  );
+            inputTime.setText(getString(R.string.newGame_timeIsEntered,gameTime));
         }
     }
-
 
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
@@ -367,8 +303,8 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
             }
             gameDate = yearAsString + "-" + monthAsString + "-" + dayAsString;
 
-            Log.d("NewGameDate",gameDate);
-            inputDate.setText( "Erledigt, Klicke um " + gameDate + " zu ändern"  );
+            Log.d(LOG_TAG,gameDate);
+            inputDate.setText(getString(R.string.newGame_dateIsEntered,gameDate));
         }
     }
 }

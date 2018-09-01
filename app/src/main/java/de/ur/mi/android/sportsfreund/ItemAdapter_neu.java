@@ -100,9 +100,14 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
             Game game = dataSnapshot.getValue(Game.class);
             game.setKey(dataSnapshot.getKey());
             gamesInDatabase.add(0,game);
-            //gamesForCurrentView.add(0, game);
+            //remove game immediately afterwards if it is historical
+            if (gameIsAlreadyOver(game)){
+                remove(game,getContext());
+            } else {
+                Log.d(LOG_TAG,"game is not yet historical: " + game.getGameName());
+            }
+
             renewViewAccordingToActionBar();
-            //notifyDataSetChanged();
         }
 
         //in our case, this only concerns added/removed participants
@@ -288,6 +293,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
                 gamesWithCurrentUser.add(gameInDatabase);
             }
         }
+        //sort games by time if there is more than one game
         if (gamesWithCurrentUser.size() >= 2){
             Collections.sort(gamesWithCurrentUser, new Comparator<Game>() {
                 @Override
@@ -304,7 +310,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
                 }
             });
         } else {
-            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2.");
+            Log.d(LOG_TAG,"gamesForCurrentView.size() is < 2.");
         }
 
         gamesForCurrentView.clear();
@@ -313,6 +319,16 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     }
     private void showAppropriateToast(Context context,String successMessage) {
         Toast.makeText(context,successMessage,Toast.LENGTH_SHORT).show();
+    }
+    //cf. method dateTimeIsHistory in NewGameActivity class
+    public boolean gameIsAlreadyOver(Game game){
+        String currentDate = SportsfreundHelper.getCurrentDateAsString();
+        Log.d(LOG_TAG,"currentDate: " + currentDate);
+        if (game.getGameDate().compareTo(currentDate) < 0){
+            return true;
+        } else {
+            return false;
+        }
     }
     public ArrayList<Game> getGamesInDatabase() {
         return gamesInDatabase;
