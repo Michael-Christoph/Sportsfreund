@@ -32,7 +32,7 @@
         android:layout_below="@id/editText_mail"
         android:layout_centerHorizontal="true"
         android:hint="@string/password"
-        android:inputType="textEmailAddress" />
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/registration_button_main"
