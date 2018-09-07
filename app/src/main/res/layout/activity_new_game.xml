@@ -10,131 +10,88 @@
 
     <!--Quelle fürs Layout: Lösung zur Übungsaufgabe "LaufApp"-->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/label_name"
-        android:id="@+id/input_label_name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
         android:id="@+id/input_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:inputType="text"
         android:hint="@string/what_game"
         android:singleLine="true"
-        android:layout_below="@+id/input_label_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:textAlignment="center"
+        android:background="@color/green"
+        android:layout_margin="@dimen/margin_item"
+        android:textCursorDrawable="@color/purple"/>
 
-    <TextView
-        android:id="@+id/input_label_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/label_date"
-        android:layout_below="@id/input_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
 
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/input_date"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:id="@+id/input_date"
-        android:layout_below="@id/input_label_date"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+
         android:text="@string/hint_date"
         android:singleLine="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@color/green"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/margin_item"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/label_time"
-        android:id="@+id/input_label_time"
-        android:layout_below="@id/input_date"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
+
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
         android:id="@+id/input_time"
-        android:layout_below="@+id/input_label_time"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="@string/hint_time"
         android:singleLine="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@color/green"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/margin_item"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/place_game"
-        android:id="@+id/input_label_place"
-        android:layout_below="@+id/input_time"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:elegantTextHeight="false"
-        android:textStyle="bold"
-        android:textAllCaps="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/find_place"
-        android:id="@+id/button_find_place"
-        android:layout_below="@id/input_label_place"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_find_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/find_place"
+            android:background="@color/green"
+            android:layout_margin="@dimen/margin_item"
+            />
+
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/button_make_new_game"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/make_new_game"
-        android:id="@+id/button_make_new_game"
-        android:layout_below="@id/button_find_place"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="@color/purple"
+        android:layout_margin="@dimen/margin_item"
+        android:textColor="@color/white"
+       />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"

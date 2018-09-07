@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -16,6 +18,7 @@ public class SportsfreundNotificationManager {
     private static SportsfreundNotificationManager sportsfreundNotificationManager;
     private String textParticipate = "Ja";
     private String textUnregister = "Absagen";
+    private static String CHANNEL_ID = "Channel one";
 
 
     private SportsfreundNotificationManager(Context context){
@@ -27,6 +30,7 @@ public class SportsfreundNotificationManager {
         }
         return sportsfreundNotificationManager;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void displayNotification(String typeOfUpdate, String gameName, String gameKey){
         Log.d("SportsfreundNoti","entered displayNotification");
         Constants.debugText += "|||||in SportsfreundNotificationManager, displayNotification: " +
