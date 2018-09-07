@@ -1,9 +1,12 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -71,7 +74,8 @@ public class SportsfreundNotificationManager {
                     .addAction(new NotificationCompat.Action(R.drawable.ic_person_red_24dp,textUnregister,pendingIntentUnregister))
                     .setVibrate(new long[]{0,1000})
                     .setAutoCancel(true)
-                    .setOngoing(false);
+                    .setOngoing(false)
+                    .setChannelId(Constants.CHANNEL_ID);
 
         /*
         //using MainActivity just for testing
@@ -87,6 +91,22 @@ public class SportsfreundNotificationManager {
         if (notificationManager != null){
             //interactive notification on android only works if there are no other notifications!
             notificationManager.cancelAll();
+            //cf. https://developer.android.com/training/notify-user/channels
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                CharSequence name = Constants.CHANNEL_NAME;
+                String description = Constants.CHANNEL_DESCRIPTION;
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(channel);
+
+                context.registerReceiver(new NotificationInteractionReceiver(),
+                        new IntentFilter(context.getString(R.string.ACTION_PARTICIPATE)));
+                context.registerReceiver(new NotificationInteractionReceiver(),
+                        new IntentFilter(context.getString(R.string.ACTION_UNREGISTER_FROM_GAME)));
+            }
             notificationManager.notify(Constants.SPORTSFREUND_NOTIFICATION_ID,mBuilder.build());
         }
     }

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG,"entered onCreate");
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         auth = FirebaseAuth.getInstance();
@@ -74,10 +74,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
 
+        finishSetup();
 
+        if (getIntent().getExtras() != null){
+            if (getIntent().getExtras().getString("gameToDelete") != null){
+                String keyGameToDelete = getIntent().getExtras().getString("gameToDelete");
+                Constants.debugText += "||||| keyGameToDelete ist: " + keyGameToDelete;
+                String userId = getIntent().getExtras().getString("userId");
+                Constants.debugText += "||||| userId ist: " + userId;
+                Constants.debugText += "||||| itemAdapter ist: " + itemAdapter.toString();
+                itemAdapter.removeParticipantFromGameViaKey(keyGameToDelete,userId,this,getString(R.string.toast_removedYou));
+                boolean moveTaskToBack = getIntent().getExtras().getBoolean("moveTaskToBack");
+                if (moveTaskToBack){
+                    moveTaskToBack(true);
+                }
+            }
+        }
     }
-
-
     private void finishSetup()  {
 
         setupAdapterAndListView();
@@ -104,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 */
             }
         });
-        tellAboutGps( getApplicationContext() );
+        tellAboutGps(getApplicationContext());
     }
 
     private void tellAboutGps(Context context) {
@@ -117,12 +130,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     private void requestPermissions(String permission, int requestCode)  {
         if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_GRANTED)  {
             ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
-        } else {
-            finishSetup();
         }
     }
 
@@ -151,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialogBuilder.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            finishSetup();
+                            //finishSetup();
                         }
                     });
                     AlertDialog dialog = dialogBuilder.create();
