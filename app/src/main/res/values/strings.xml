@@ -32,9 +32,9 @@
     <string name="newGame_locationIsEntered">Ort festgelegt; über GoogleMaps ändern?</string>
     <string name="make_new_game">Spiel erstellen</string>
     <string name="what_game">Welches Spiel willst du spielen?</string>
-    <string name="hint_time">Klicke hier um Uhrzeit einzugeben</string>
-    <string name="hint_date">Klicke hier um das Datum festzulegen</string>
-    <string name="find_place">Ort über GoogleMaps festlegen</string>
+    <string name="hint_time">Uhrzeit festlegen</string>
+    <string name="hint_date">Datum festlegen</string>
+    <string name="find_place">Ort festlegen</string>
     <string name="label_name">Art des Spiels</string>
     <string name="label_time">Zeit</string>
     <string name="place_game">Ort</string>

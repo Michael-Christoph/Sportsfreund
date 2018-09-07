@@ -19,6 +19,7 @@ public class SportsfreundNotificationManager {
     private static SportsfreundNotificationManager sportsfreundNotificationManager;
     private String textParticipate = "Ja";
     private String textUnregister = "Absagen";
+    private static String CHANNEL_ID = "Channel one";
 
 
     private SportsfreundNotificationManager(Context context){
@@ -30,6 +31,7 @@ public class SportsfreundNotificationManager {
         }
         return sportsfreundNotificationManager;
     }
+
     public void displayNotification(String typeOfUpdate, String gameName, String gameKey){
         Log.d("SportsfreundNoti","entered displayNotification");
         Constants.debugText += "|||||in SportsfreundNotificationManager, displayNotification: " +

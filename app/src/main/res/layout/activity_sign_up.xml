@@ -7,22 +7,27 @@
     tools:context=".SignUpActivity"
     android:padding="16dp">
 
+
     <TextView
         android:id="@+id/textview_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/registration_request"
-        android:textSize="22sp"/>
+        android:textAlignment="center"
+        android:textColor="@color/purple"/>
+
+
 
     <EditText
+        android:layout_below="@id/textview_top"
         android:id="@+id/editText_mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/textview_top"
         android:layout_centerHorizontal="true"
         android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:background="@color/green"
+        android:textCursorDrawable="@color/purple"/>
 
     <EditText
         android:id="@+id/editText_password"
@@ -32,7 +37,9 @@
         android:layout_below="@id/editText_mail"
         android:layout_centerHorizontal="true"
         android:hint="@string/password"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:background="@color/green"
+        android:textCursorDrawable="@color/purple"/>
 
     <Button
         android:id="@+id/registration_button_main"
@@ -41,37 +48,38 @@
         android:layout_marginTop="10dp"
         android:layout_below="@id/editText_password"
         android:layout_centerHorizontal="true"
-        android:text="@string/registration_button"/>
+        android:text="@string/registration_button"
+        android:background="@color/purple"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/registration_button_beneath_main"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
         android:background="@null"
         android:layout_below="@id/registration_button_main"
         android:text="@string/button_forgot_password"
         android:textAllCaps="false"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/purple" />
 
     <Button
         android:id="@+id/registration_button_bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:background="@null"
         android:layout_below="@id/registration_button_beneath_main"
         android:text="@string/button_link_to_login_text"
         android:textAllCaps="false"
-        android:textColor="@color/green"
-        android:textSize="18dp" />
+        android:textColor="@color/purple"
+        android:textSize="18dp"/>
 
     <ProgressBar
         android:id="@+id/register_progressbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_below="@+id/registration_button_bottom"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="70dp"
         android:visibility="gone"/>
 
 </RelativeLayout>

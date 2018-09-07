@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean gpsEnabled= NavigationController.getInstance(context).gpsIsEnabled();
         if ( gpsEnabled == false )
         {
-            Toast.makeText(context, "GPS ist ausgeschaltet, daher kann Entfernung nicht angezeigt werden!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "GPS ist ausgeschaltet, daher kann Entfernung nicht angezeigt werden!", Toast.LENGTH_SHORT).show();
         }else{
             //Toast.makeText(context, "GPS ist eingeschaltet!", Toast.LENGTH_LONG).show();
         }
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
 
-        itemAdapter.renewViewAccordingToActionBar();
+        //itemAdapter.renewViewAccordingToActionBar();
         setActionBarAccordingToView();
 
         super.onStart();
@@ -234,10 +234,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(mToggle.onOptionsItemSelected(item))  {
-            return true;
+
+        int id = item.getItemId();
+
+
+        itemAdapter.renewViewAccordingToActionBar();
+        if(id == R.id.nearby) {
+            if (allGamesIsCurrentView) {
+                Toast.makeText(getApplicationContext(), "all Games", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "my Games", Toast.LENGTH_SHORT).show();
+            }
         }
-        Toast.makeText(getApplicationContext(),"Die Actionbar-Items ersetzen wir durch einen Refresh-Button, oder?",Toast.LENGTH_LONG).show();
+
+
+            if(mToggle.onOptionsItemSelected(item))  {
+                return true;
+            }
+
+
         /*
         switch (item.getItemId()) {
             case R.id.signedIn:
