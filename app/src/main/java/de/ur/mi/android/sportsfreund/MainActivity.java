@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -236,21 +237,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
-
-        itemAdapter.renewViewAccordingToActionBar();
-        if(id == R.id.nearby) {
-            if (allGamesIsCurrentView) {
-                Toast.makeText(getApplicationContext(), "all Games", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "my Games", Toast.LENGTH_SHORT).show();
+        if(id == R.id.refresh) {
+            itemAdapter.renewViewAccordingToActionBar();
+            Toast.makeText(this,getString(R.string.toast_refreshed),Toast.LENGTH_SHORT).show();
+            if (itemAdapter.getGamesInDatabase().get(0).distanceToGame(this) == null){
+                Toast.makeText(this,getString(R.string.toast_locationNotFound),Toast.LENGTH_SHORT).show();
             }
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
+                itemAdapter.setShowNoGps(true);
+            }
+
         }
 
-
-            if(mToggle.onOptionsItemSelected(item))  {
-                return true;
-            }
+        if(mToggle.onOptionsItemSelected(item))  {
+            return true;
+        }
 
 
         /*

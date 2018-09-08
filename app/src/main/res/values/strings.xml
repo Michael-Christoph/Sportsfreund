@@ -11,10 +11,13 @@
     <string name="password">Password</string>
     <string name="registration_request">Bitte registriere dich, damit du alle Funktionen der Sportsfreund-App nutzen kannst!</string>
     <string name="login_request">Bitte melde dich an, damit du alle Funktionen der Sportsfreund-App nutzen kannst!</string>
+
     <string name="button_login_text">Mit dieser Mail anmelden</string>
     <string name="button_link_to_login_text">Ich bin bereits registriert!</string>
     <string name="button_link_to_signUp_text">Ich bin noch nicht registriert!</string>
     <string name="button_forgot_password">Oh weh, ich habe mein Passwort vergessen!</string>
+    <!-- x: \u274C gps marker: \u2316 -->
+    <string name="distanceNotAvailable">no GPS!</string>
     <string name="enter_email">Bitte trage deine Email-Adresse ein!</string>
     <string name="enter_password">Bitte trage ein Passwort ein!</string>
     <string name="password_too_short">Dein Passwort ist zu kurz, verwende wenigstens sechs Zeichen!</string>
@@ -53,11 +56,14 @@
     <string name="gps_title">Achtung</string>
     <string name="positive_button_text">Erlauben</string>
     <string name="negative_button_text">Weiter ohne GPS</string>
+    <string name="signUp_successful">Du bist jetzt registriert und angemeldet!</string>
     <string name="toast_game_added">Spiel wurde erstellt!</string>
     <string name="toast_add_game_failed">Sorry, dein Spiel konnte nicht erstellt werden. Bitte versuche es später noch einmal!</string>
     <string name="toast_removedRandomParticipant">Der zufällige Teilnehmer wurde vom Spiel abgemeldet</string>
     <string name="toast_removedYou">Okay, du wurdest soeben abgemeldet</string>
     <string name="toast_enterNameOfGame">Bitte gib einen Namen für das Spiel an!</string>
+    <string name="toast_refreshed">Ansicht wurde aktualisiert</string>
+    <string name="toast_locationNotFound">Dein aktueller Ort konnte leider nicht ermittelt werden!</string>
     <string name="title_maps_instruction">Anleitung</string>
     <string name="ok">OK</string>
     <string name="text_maps_instruction">Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen</string>

@@ -3,20 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     tools:context=".AccountActivity"
-    android:weightSum="3"
+    android:weightSum="5"
     android:orientation="vertical">
 
+    <!--
+    <de.ur.mi.android.sportsfreund.ProportionalImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_zeichnungalpha"
+        android:adjustViewBounds="true"
+        android:layout_weight="1"/>
+        -->
 
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight= "1"
+        android:src="@drawable/ic_zeichnungalpha"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_big"
+        />
 
     <TextView
         android:id="@+id/textViewAccount"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/account_text"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_small"
         android:layout_weight="1"
         android:textAlignment="center"
         android:background="@color/green"
@@ -28,20 +46,26 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/email"
-        android:textSize="26sp"
+        android:textSize="@dimen/text_large"
+        android:textColor="@color/white"
         android:layout_weight="1"
         android:textAlignment="center"
         android:background="@color/purple"
         android:layout_margin="@dimen/margin_item"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:weightSum="2"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/margin_item">
+        android:layout_margin="@dimen/margin_item"
+        android:baselineAligned="true">
 
         <Button
         android:id="@+id/account_button"
@@ -60,12 +84,33 @@
         android:layout_marginTop="10dp"
         android:text="@string/back"
         android:layout_weight="1"
-        android:background="@color/green"
-        android:layout_marginLeft="@dimen/margin_item"/>
+        android:layout_marginLeft="@dimen/margin_item"
+        android:background="@color/grey"/>
 
     </LinearLayout>
 
-
-
+    <!--
+    <LinearLayout
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/margin_item">
+        <Button
+            android:id="@+id/account_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:text="@string/sign_out"
+            android:layout_marginTop="@dimen/margin_big"
+            />
+        <Button
+            android:id="@+id/account_button_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:layout_marginBottom="@dimen/margin_tiny"/>
+    </LinearLayout>
+    -->
 
 </LinearLayout>

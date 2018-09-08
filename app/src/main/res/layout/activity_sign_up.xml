@@ -1,85 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpActivity"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:weightSum="12"
+    android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/signup_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_giant"
+        android:src="@drawable/ic_zeichnungalpha"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_item"
+        android:layout_alignParentTop="true"
+        android:layout_weight="2"/>
 
     <TextView
         android:id="@+id/textview_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/registration_request"
+        android:textSize="@dimen/text_small"
         android:textAlignment="center"
         android:textColor="@color/purple"/>
 
-
-
     <EditText
-        android:layout_below="@id/textview_top"
         android:id="@+id/editText_mail"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_big"
         android:hint="@string/email"
+        android:textSize="@dimen/text_large"
         android:inputType="textEmailAddress"
         android:background="@color/green"
         android:textCursorDrawable="@color/purple"/>
 
     <EditText
         android:id="@+id/editText_password"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/editText_mail"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_item"
         android:hint="@string/password"
+        android:textSize="@dimen/text_large"
         android:inputType="textPassword"
         android:background="@color/green"
         android:textCursorDrawable="@color/purple"/>
 
     <Button
         android:id="@+id/registration_button_main"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/editText_password"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_item"
         android:text="@string/registration_button"
         android:background="@color/purple"
         android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/registration_button_beneath_main"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@null"
-        android:layout_below="@id/registration_button_main"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_big"
         android:text="@string/button_forgot_password"
         android:textAllCaps="false"
-        android:textColor="@color/purple" />
+        android:textSize="@dimen/text_tiny"
+        android:background="@color/grey"/>
 
     <Button
         android:id="@+id/registration_button_bottom"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@null"
-        android:layout_below="@id/registration_button_beneath_main"
+        android:layout_height="wrap_content"
         android:text="@string/button_link_to_login_text"
         android:textAllCaps="false"
-        android:textColor="@color/purple"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_tiny"
+        android:background="@color/grey"
+        android:layout_marginTop="@dimen/margin_item"/>
 
     <ProgressBar
         android:id="@+id/register_progressbar"
+        android:layout_height="@dimen/margin_giant"
+        android:layout_weight="4"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/registration_button_bottom"
-        android:layout_marginTop="70dp"
         android:visibility="gone"/>
 
-</RelativeLayout>
+</LinearLayout>

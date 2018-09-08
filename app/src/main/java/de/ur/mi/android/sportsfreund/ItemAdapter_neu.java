@@ -1,5 +1,6 @@
 package de.ur.mi.android.sportsfreund;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,12 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     private ArrayList<Game> gamesForCurrentView;
     private ArrayList<Game> gamesWithCurrentUser;
     private DatabaseReference firebaseGameRef;
+
+    public static void setShowNoGps(boolean showNoGps) {
+        ItemAdapter_neu.showNoGps = showNoGps;
+    }
+
+    private static boolean showNoGps = false;
 
     /*
     private String toastGameAdded = "Spiel wurde erstellt!";
@@ -70,8 +77,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
         String title = gameToView.getGameName();
         String body = "Zeit: " + gameToView.getGameDate() + ", " + gameToView.getGameTime() + " Uhr";
         String body2;
-        if (gameToView.distanceToGame(getContext()) == null){
-            body2 = "Entfernung kann ohne GPS nicht angezeigt werden!";
+        if (gameToView.distanceToGame(getContext()) == null || showNoGps){
+            body2 = getContext().getString(R.string.distanceNotAvailable);
         } else {
             if (gameToView.distanceToGame(getContext()) <= 1000) {
                 body2 = Math.round(gameToView.distanceToGame(getContext())) + " m";
@@ -243,6 +250,7 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
     public void sortGamesFromDatabaseByProximity() {
         gamesForCurrentView.clear();
         gamesForCurrentView.addAll((ArrayList<Game>) gamesInDatabase.clone());
+
         if (gamesForCurrentView.size() >= 2 && gamesForCurrentView.get(0).distanceToGame(getContext()) != null){
             Collections.sort(gamesForCurrentView, new Comparator<Game>() {
                 @Override
@@ -256,9 +264,8 @@ public class ItemAdapter_neu extends ArrayAdapter<Game> {
                     return comparisonResult;
                 }
             });
-        } else {
-            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2 oder distanceToGame liefert null.");
-
+        } else if (gamesForCurrentView.size() < 2) {
+            Log.d(LOG_TAG,"gamesForCurrentView ist kleiner 2");
         }
 
         /*

@@ -68,7 +68,8 @@ public class SportsfreundNotificationManager {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context,Constants.CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_my_location_yellow_24dp)
+                    //.setSmallIcon(R.drawable.ic_my_location_yellow_24dp)
+                    .setSmallIcon(R.drawable.ic_zeichnungalpha)
                     //.setContentTitle(title)
                     //.setContentText(body)
                     .setStyle(bigTextStyle)

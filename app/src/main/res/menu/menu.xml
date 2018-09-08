@@ -5,7 +5,7 @@
     //Layout für ActionBar
 
     <item
-        android:id="@+id/nearby"
+        android:id="@+id/refresh"
         android:title="In der Nähe"
         app:showAsAction="always"
         android:icon="@drawable/ic_refresh_white_24dp">
