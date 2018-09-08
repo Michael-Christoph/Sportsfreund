@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 import com.google.firebase.database.Exclude;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class Game implements Parcelable{
     public Float distanceToGame(Context context){
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 gpsIsEnabled(context)){
+            NavigationController.getInstance(context).refreshFields();
             Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
             if (lastKnownLocation != null){
                 Location gameLocation = new Location( "" );

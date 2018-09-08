@@ -13,7 +13,7 @@ public class NavigationController {
 
     private static NavigationController mInstance = null;
     private Context context;
-    private LocationManager locationManager;
+    private static LocationManager locationManager;
     private Location lastKnownLocation;
     private String bestProvider;
 
@@ -34,6 +34,9 @@ public class NavigationController {
 
     private NavigationController(Context context) {
         this.context = context;
+        refreshFields();
+    }
+    public void refreshFields(){
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         setBestProvider();

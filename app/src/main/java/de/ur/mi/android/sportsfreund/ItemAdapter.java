@@ -60,6 +60,7 @@ public class ItemAdapter extends ArrayAdapter<Game> {
         String body = "Zeit: " + gameToView.getGameDate() + ", " + gameToView.getGameTime() + " Uhr";
         String body2;
         if (gameToView.distanceToGame(getContext()) == null || showNoGps){
+            Log.d(LOG_TAG,"showNoGps: " + showNoGps);
             body2 = getContext().getString(R.string.distanceNotAvailable);
         } else {
             if (gameToView.distanceToGame(getContext()) < 1000) {
@@ -221,6 +222,7 @@ public class ItemAdapter extends ArrayAdapter<Game> {
         gamesForCurrentView.addAll((ArrayList<Game>) gamesInDatabase.clone());
 
         if (gamesForCurrentView.size() >= 2 && gamesForCurrentView.get(0).distanceToGame(getContext()) != null){
+            Log.d(LOG_TAG,"gamesForCurrentView oberstes Spiel: " + gamesForCurrentView.get(0).distanceToGame(getContext()));
             Collections.sort(gamesForCurrentView, new Comparator<Game>() {
                 @Override
                 public int compare(Game game, Game t1) {

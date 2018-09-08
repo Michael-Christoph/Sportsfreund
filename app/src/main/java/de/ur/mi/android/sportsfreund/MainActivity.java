@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadActivity();
+    }
+    private void loadActivity(){
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG,"entered onCreate");
 
@@ -203,17 +206,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
         if(id == R.id.refresh) {
-            itemAdapter.renewViewAccordingToSelectedView();
             Toast.makeText(this,getString(R.string.toast_refreshed),Toast.LENGTH_SHORT).show();
+            itemAdapter.renewViewAccordingToSelectedView();
+
             if (itemAdapter.getGamesInDatabase().get(0).distanceToGame(this) == null){
                 Toast.makeText(this,getString(R.string.toast_locationNotFound),Toast.LENGTH_SHORT).show();
             }
+            if (NavigationController.getInstance(getApplicationContext()).isGpsEnabled()){
+                itemAdapter.setShowNoGps(false);
+            } else {
+                itemAdapter.setShowNoGps(true);
+            }
+
+            /*
             LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             if (!locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
                 itemAdapter.setShowNoGps(true);
             } else {
                 itemAdapter.setShowNoGps(false);
             }
+            */
+
         }
 
         if(mToggle.onOptionsItemSelected(item))  {
