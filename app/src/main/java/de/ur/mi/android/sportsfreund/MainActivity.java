@@ -54,9 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadActivity();
-    }
-    private void loadActivity(){
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG,"entered onCreate");
 
@@ -92,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
     private void finishSetup()  {
         setupAdapterAndListView();
         itemAdapter.renewViewAccordingToSelectedView();
@@ -121,14 +119,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode)  {
+        switch (requestCode) {
             case LOCATION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)  {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
                     finishSetup();
-                }
-                else {
+                } else {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                     dialogBuilder.setTitle(R.string.gps_title);
                     dialogBuilder.setMessage(R.string.gps_message);
@@ -152,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+    */
 
     private void setupAdapterAndListView() {
         itemAdapter = new ItemAdapter(this,gamesForCurrentView);
@@ -212,21 +211,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (itemAdapter.getGamesInDatabase().get(0).distanceToGame(this) == null){
                 Toast.makeText(this,getString(R.string.toast_locationNotFound),Toast.LENGTH_SHORT).show();
             }
+            NavigationController.getInstance(getApplicationContext()).refreshFields();
             if (NavigationController.getInstance(getApplicationContext()).isGpsEnabled()){
                 itemAdapter.setShowNoGps(false);
             } else {
                 itemAdapter.setShowNoGps(true);
             }
-
-            /*
-            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            if (!locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
-                itemAdapter.setShowNoGps(true);
-            } else {
-                itemAdapter.setShowNoGps(false);
-            }
-            */
-
         }
 
         if(mToggle.onOptionsItemSelected(item))  {
