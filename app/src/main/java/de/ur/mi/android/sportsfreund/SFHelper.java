@@ -2,7 +2,7 @@ package de.ur.mi.android.sportsfreund;
 
 import java.util.Calendar;
 
-public class SportsfreundHelper {
+public class SFHelper {
 
     //returns a string yyyy-mm-dd
     public static String getCurrentDateAsString(){
@@ -20,6 +20,7 @@ public class SportsfreundHelper {
         String currentDate = c.get(Calendar.YEAR) + "-" + currentMonthString + "-" + currentDayString;
         return currentDate;
     }
+
     public static String getCurrentTimeAsString(){
         final Calendar c = Calendar.getInstance();
         int currentHour = c.get(Calendar.HOUR_OF_DAY);

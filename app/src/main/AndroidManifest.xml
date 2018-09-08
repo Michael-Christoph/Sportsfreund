@@ -25,17 +25,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         >
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SignUpActivity"
-            android:label="@string/app_name" />
-        <activity android:name=".NewGameActivity" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".NewGameActivity"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -50,13 +54,18 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".GameDetails" />
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".AccountActivity" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GameDetails"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SignInActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ResetPasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AccountActivity"
+            android:screenOrientation="portrait"/>
 
-        <receiver android:name=".NotificationInteractionReceiver">
+        <receiver android:name=".SFNotificationInteractionReceiver">
             <intent-filter>
 
                 <!-- <action android:name="@string/ACTION_UNREGISTER_FROM_GAME"/> -->
@@ -90,18 +99,18 @@
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/common_google_signin_btn_icon_light_focused" />
         <!--
-             Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more.
+             Set color used with incoming notification messages. This is used when no color is
+             set for the incoming notification message. See README(https://goo.gl/6BKBk7) for more.
         -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".DebugActivity" />
         <activity
             android:name=".SimulationActivity"
             android:label="@string/title_activity_simulation"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

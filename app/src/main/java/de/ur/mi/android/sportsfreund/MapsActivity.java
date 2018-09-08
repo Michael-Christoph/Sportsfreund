@@ -19,27 +19,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+//cf. https://developers.google.com/maps/documentation/android-sdk/start
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    private static final String LOG_TAG = "MapsActivity";
+    private static final int ZOOM_LEVEL = 10;
 
     private GoogleMap mMap;
     private final LatLng REGENSBURG = new LatLng(49, 12);
     private LatLng newLocation;
-
-    final int REQUEST_CODE = 1;
-    private String titelAnleitung = "Anleitung";
-    private String textAnleitung = "Ziehen Sie den Marker zu der Stelle auf der Karte, die Sie als Treffpunkt festlegen wollen";
-    private String positiveButton = "OK";
-    private String textBestätigung = "Wollen sie diesen Ort als Treffpunkt übernehmen?";
-    private String markertitle = "Ort des Spiels";
-    public static final String KEY_LOCATION_LAT= "lKeyLat";
-    public static final String KEY_LOCATION_LONG = "lKeyLong";
-
-    public static final String KEY_LOCATION_LAT_D= "lKeyLatDetails";
-    public static final String KEY_LOCATION_LONG_D = "lKeyLongDetails";
-    public static final String KEY_GAME_NAME = "GameName";
-
-    public static final String KEY_LOCATION = "location";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +37,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
     /**
@@ -66,119 +53,101 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
 
         if (intent.getExtras() == null) {
-            Log.d("wo samma", "selectLocation ");
+            Log.d(LOG_TAG, "selectLocation ");
             selectLocation();
         } else {
             showLocDetail();
         }
     }
 
-        private void selectLocation () {
+    private void selectLocation () {
 
-            showInstructionDialog();
+        showInstructionDialog();
 
+        String markerTitle = "Ort des Spiels";
+        mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title( markerTitle ).draggable( true ) );
+        CameraUpdate center=
+                CameraUpdateFactory.newLatLng(REGENSBURG);
 
-            mMap.addMarker( new MarkerOptions().position( REGENSBURG ).title( markertitle ).draggable( true ) );
-            CameraUpdate center=
-                    CameraUpdateFactory.newLatLng(REGENSBURG);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(ZOOM_LEVEL);
 
-            CameraUpdate zoom=CameraUpdateFactory.zoomTo(10);
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
 
-            mMap.moveCamera(center);
-            mMap.animateCamera(zoom);
+        mMap.setOnMarkerDragListener( new OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
-            mMap.setOnMarkerDragListener( new OnMarkerDragListener() {
-                @Override
-                public void onMarkerDragStart(Marker marker) {
+            }
+            @Override
+            public void onMarkerDrag(Marker marker) {
 
-                }
-
-                @Override
-                public void onMarkerDrag(Marker marker) {
-
-                }
-
-                @Override
-                public void onMarkerDragEnd(Marker marker) {
-
-                    newLocation = marker.getPosition();
-                    confirmLocation();
-
-
-                }
-            } );
-        }
+            }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                newLocation = marker.getPosition();
+                confirmLocation();
+            }
+        });
+    }
 
 
-        private void goBackToNewGame () {
+    private void goBackToNewGame () {
+        Intent result = new Intent( this, NewGameActivity.class );
 
-            Intent result = new Intent( this, NewGameActivity.class );
+        double locLong = newLocation.longitude;
+        double locLat = newLocation.latitude;
 
+        result.putExtra(GlobalVariables.KEY_LOCATION_LAT, locLat );
+        result.putExtra(GlobalVariables.KEY_LOCATION_LONG, locLong );
 
-            double locLong = newLocation.longitude;
-            double locLat = newLocation.latitude;
+        setResult( Activity.RESULT_OK, result );
+        finish();
+    }
 
-            result.putExtra( KEY_LOCATION_LAT, locLat );
-            result.putExtra( KEY_LOCATION_LONG, locLong );
+    private void showInstructionDialog () {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder( this );
+        dialogBuilder.setTitle( R.string.title_maps_instruction );
+        dialogBuilder.setMessage( R.string.text_maps_instruction );
+        dialogBuilder.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+            }
+        } );
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
 
-            /*
-            // dummy:
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location dummyLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            result.putExtra(KEY_LOCATION,new Location)
-            */
-            setResult( Activity.RESULT_OK, result );
-            finish();
+    private void confirmLocation () {
 
-        }
-
-        private void showInstructionDialog () {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder( this );
-            dialogBuilder.setTitle( R.string.title_maps_instruction );
-            dialogBuilder.setMessage( R.string.text_maps_instruction );
-            dialogBuilder.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            } );
-            AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-        }
-
-        private void confirmLocation () {
-
-            AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder( this );
-            dialogBuilder2.setTitle( R.string.title_maps_instruction );
-            dialogBuilder2.setMessage( R.string.text_maps_verify );
-            dialogBuilder2.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    goBackToNewGame();
-                }
-            } );
-            AlertDialog dialog = dialogBuilder2.create();
-            dialog.show();
-        }
+        AlertDialog.Builder dialogBuilder2 = new AlertDialog.Builder( this );
+        dialogBuilder2.setTitle( R.string.title_maps_instruction );
+        dialogBuilder2.setMessage( R.string.text_maps_verify );
+        dialogBuilder2.setPositiveButton( R.string.ok, new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goBackToNewGame();
+            }
+        } );
+        AlertDialog dialog = dialogBuilder2.create();
+        dialog.show();
+    }
 
     private void showLocDetail() {
-        double locLong = getIntent().getExtras().getDouble(KEY_LOCATION_LONG_D);
-        double locLat = getIntent().getExtras().getDouble( KEY_LOCATION_LAT_D );
-        String gameTitle = "Hier wird " + getIntent().getExtras().getString( KEY_GAME_NAME ) +" gespielt";
+        double locLong = getIntent().getExtras().getDouble(GlobalVariables.KEY_LOCATION_LONG_D);
+        double locLat = getIntent().getExtras().getDouble(GlobalVariables.KEY_LOCATION_LAT_D);
+        String gameTitle = "Hier wird " + getIntent().getExtras().getString(GlobalVariables.KEY_GAME_NAME) +" gespielt";
 
-        LatLng gameLoc = new LatLng(locLat, locLong);
+        LatLng gameLoc = new LatLng(locLat,locLong);
 
         mMap.addMarker( new MarkerOptions().position( gameLoc ).title( gameTitle ));
 
-        CameraUpdate center=
-                CameraUpdateFactory.newLatLng(gameLoc);
-        CameraUpdate zoom =
-                CameraUpdateFactory.zoomTo(10);
+        CameraUpdate center = CameraUpdateFactory.newLatLng(gameLoc);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
 
         mMap.moveCamera(center);
         mMap.animateCamera(zoom);
     }
-
 }
 

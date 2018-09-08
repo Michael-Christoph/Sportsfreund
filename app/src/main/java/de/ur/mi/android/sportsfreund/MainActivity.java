@@ -35,22 +35,21 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String LOG_TAG = "MyMainActivity";
+    private final int LOCATION_REQUEST_CODE = 2;
+    private static ItemAdapter itemAdapter;
+    private static boolean allGamesIsCurrentView = true;
+
     ActionBar actionBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
-    private static boolean allGamesIsCurrentView = true;
     ArrayList<Game> gamesForCurrentView = new ArrayList<>();
-    ArrayList<Game> gamesInDatabase = new ArrayList<>();
 
     private FirebaseAuth auth;
 
-    private static ItemAdapter_neu itemAdapter;
-    ListView listView;
-    FloatingActionButton fab;
-    private final int LOCATION_REQUEST_CODE = 2;
-
-    private static final String LOG_TAG = "MyMainActivity";
+    private ListView listView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.games_nearby);
+
         mDrawerLayout = findViewById(R.id.mainDrawerLayout);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
-
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
@@ -77,15 +76,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         finishSetup();
 
+        //MainActivity has to be started with extras when notification interaction is used
         if (getIntent().getExtras() != null){
-            if (getIntent().getExtras().getString("gameToDelete") != null){
-                String keyGameToDelete = getIntent().getExtras().getString("gameToDelete");
-                Constants.debugText += "||||| keyGameToDelete ist: " + keyGameToDelete;
-                String userId = getIntent().getExtras().getString("userId");
-                Constants.debugText += "||||| userId ist: " + userId;
-                Constants.debugText += "||||| itemAdapter ist: " + itemAdapter.toString();
+            if (getIntent().getExtras().getString(GlobalVariables.KEY_GAME_TO_DELETE) != null){
+                String keyGameToDelete = getIntent().getExtras().getString(GlobalVariables.KEY_GAME_TO_DELETE);
+                String userId = getIntent().getExtras().getString(GlobalVariables.KEY_USER_ID);
                 itemAdapter.removeParticipantFromGameViaKey(keyGameToDelete,userId,this,getString(R.string.toast_removedYou));
-                boolean moveTaskToBack = getIntent().getExtras().getBoolean("moveTaskToBack");
+                boolean moveTaskToBack = getIntent().getExtras().getBoolean(GlobalVariables.KEY_MOVE_TASK_TO_BACK);
                 if (moveTaskToBack){
                     moveTaskToBack(true);
                 }
@@ -93,41 +90,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     private void finishSetup()  {
-
         setupAdapterAndListView();
+        itemAdapter.renewViewAccordingToSelectedView();
 
-        itemAdapter.renewViewAccordingToActionBar();
-
-        //nur fuer MP zum Testen
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 changeToNewGame();
-                /*
-                String gameKey = "-LJsF-e5rkJAQGi4PxmS";
-                auth = FirebaseAuth.getInstance();
-                if (auth.getCurrentUser() != null){
-                    MainActivity.getItemAdapter().removeParticipantFromGameViaKey(gameKey,auth.getCurrentUser().getUid());
-                } else {
-                    Log.d("Receiver","user is null");
-                    //Alert, dass leider keine Abmeldung möglich; User möge sich bitte zuerst anmelden
-                    // und dann manuell vom Spiel abmelden.
-                }
-                */
             }
         });
+
+        //informs user if gps is not turned on
         tellAboutGps(getApplicationContext());
     }
 
     private void tellAboutGps(Context context) {
-        boolean gpsEnabled= NavigationController.getInstance(context).gpsIsEnabled();
-        if ( gpsEnabled == false )
-        {
+        boolean gpsEnabled= NavigationController.getInstance(context).isGpsEnabled();
+        if (gpsEnabled == false) {
             Toast.makeText(context, "GPS ist ausgeschaltet, daher kann Entfernung nicht angezeigt werden!", Toast.LENGTH_SHORT).show();
-        }else{
-            //Toast.makeText(context, "GPS ist eingeschaltet!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -141,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)  {
             case LOCATION_REQUEST_CODE:
-                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED)  {
+                if (grantResults.length > 0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)  {
                     finishSetup();
                 }
                 else {
@@ -154,11 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 requestPermissions(permissions,LOCATION_REQUEST_CODE);
                             }
-                            //Timo hat ursprgl geschrieben:
-                            //requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
                         }
                     });
-
                     dialogBuilder.setNegativeButton(R.string.negative_button_text, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -173,14 +151,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupAdapterAndListView() {
-        itemAdapter = new ItemAdapter_neu(this,gamesForCurrentView);
+        itemAdapter = new ItemAdapter(this,gamesForCurrentView);
         listView = findViewById(R.id.listView);
         listView.setAdapter(itemAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("bla","onItemClick funktioniert");
+                Log.d(LOG_TAG,"onItemClick funktioniert");
                 Game game = itemAdapter.getItem(position);
                 showGame(game);
             }
@@ -193,20 +171,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showGame(Game game)  {
-        Log.d(LOG_TAG,"gameName: " + game.getGameName());
-        Log.d(LOG_TAG,"gameDate: " + game.getGameDate());
-        Log.d(LOG_TAG,"gameTime: " + game.getGameTime());
         Intent intent = new Intent(this,GameDetails.class);
         intent.putExtra("game",game);
-        //intent.putExtra("title",title);
-        //intent.putExtra("body",body);
         startActivity(intent);
     }
 
     @Override
     protected void onRestart() {
         Log.d(LOG_TAG,"entered onRestart");
-
         super.onRestart();
     }
 
@@ -214,16 +186,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart(){
         Log.d(LOG_TAG,"entered onStart");
-
         requestPermissions(Manifest.permission.ACCESS_FINE_LOCATION,LOCATION_REQUEST_CODE);
-
-        //itemAdapter.renewViewAccordingToActionBar();
         setActionBarAccordingToView();
-
         super.onStart();
     }
 
-    //Instanziieren des Action menüs
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -231,14 +198,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    //On selected Methode für MenuItems
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
         if(id == R.id.refresh) {
-            itemAdapter.renewViewAccordingToActionBar();
+            itemAdapter.renewViewAccordingToSelectedView();
             Toast.makeText(this,getString(R.string.toast_refreshed),Toast.LENGTH_SHORT).show();
             if (itemAdapter.getGamesInDatabase().get(0).distanceToGame(this) == null){
                 Toast.makeText(this,getString(R.string.toast_locationNotFound),Toast.LENGTH_SHORT).show();
@@ -246,35 +211,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             if (!locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
                 itemAdapter.setShowNoGps(true);
+            } else {
+                itemAdapter.setShowNoGps(false);
             }
-
         }
 
         if(mToggle.onOptionsItemSelected(item))  {
             return true;
         }
 
-
-        /*
-        switch (item.getItemId()) {
-            case R.id.signedIn:
-                actionBar.setTitle(R.string.games_signd_in);
-                allGamesIsCurrentView = false;
-
-                itemAdapter.renewViewAccordingToActionBar();
-                setupAdapterAndListView();
-                break;
-            case R.id.nearby:
-                actionBar.setTitle(R.string.games_nearby);
-                allGamesIsCurrentView = true;
-
-                itemAdapter.renewViewAccordingToActionBar();
-                setupAdapterAndListView();
-                break;
-
-
-        }
-        */
         return super.onOptionsItemSelected(item);
     }
 
@@ -290,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 startActivity(new Intent(MainActivity.this,SignUpActivity.class));
             }
-
         }
         if(id == R.id.newGame) {
             changeToNewGame();
@@ -299,21 +243,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawers();
             allGamesIsCurrentView = true;
             setActionBarAccordingToView();
-            itemAdapter.renewViewAccordingToActionBar();
+            itemAdapter.renewViewAccordingToSelectedView();
         }
         if(id == R.id.myGames) {
             if (auth.getCurrentUser() != null) {
                 mDrawerLayout.closeDrawers();
                 allGamesIsCurrentView = false;
                 setActionBarAccordingToView();
-                itemAdapter.renewViewAccordingToActionBar();
+                itemAdapter.renewViewAccordingToSelectedView();
             } else {
                 startActivity(new Intent(this,SignUpActivity.class));
             }
-
-        }
-        if (id == R.id.debug_item){
-            startActivity(new Intent(this,DebugActivity.class));
         }
         if (id == R.id.simulation){
             startActivity(new Intent(this,SimulationActivity.class));
@@ -321,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return false;
     }
-    public static ItemAdapter_neu getItemAdapter() {
+    public static ItemAdapter getItemAdapter() {
         return itemAdapter;
     }
     public static boolean allGamesIsCurrentView() {
@@ -329,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public static void setAllGamesIsCurrentView(boolean allGamesIsCurrentView) {
         MainActivity.allGamesIsCurrentView = allGamesIsCurrentView;
-        itemAdapter.renewViewAccordingToActionBar();
+        itemAdapter.renewViewAccordingToSelectedView();
     }
     private void setActionBarAccordingToView(){
         if (allGamesIsCurrentView){

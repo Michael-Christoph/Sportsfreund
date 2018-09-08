@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-
-    <item android:id="@+id/games"
-        android:title="Spiele Übersicht"
+    <item android:id="@+id/games_nearby"
+        android:title="@string/games_nearby"
         android:icon="@drawable/ic_my_location_black_24dp"/>
 
     <item android:id="@+id/account"
-        android:title="Account"
+        android:title="@string/drawer_account"
         android:icon="@drawable/ic_person_black_24dp"/>
-
 </menu>

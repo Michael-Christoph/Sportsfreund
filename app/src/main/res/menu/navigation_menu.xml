@@ -16,14 +16,7 @@
     <item android:id="@+id/account"
         android:title="@string/drawer_account"
         android:icon="@drawable/ic_person_black_24dp"/>
-
-    <item
-        android:id="@+id/debug_item"
-        android:title="@string/drawer_debugActivity"/>
     <item
         android:id="@+id/simulation"
         android:title="@string/drawer_simulation"/>
-
-
-
 </menu>

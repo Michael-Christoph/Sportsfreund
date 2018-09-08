@@ -16,12 +16,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AccountActivity extends AppCompatActivity {
 
+    private static final String LOG_TAG = "AccountActivity";
+
     private FirebaseAuth auth;
     private String userIdOfLastUser = "";
-
     private TextView textViewTop;
     private TextView textViewEmail;
-    private Button button;
+    private Button buttonSignOut;
     private Button buttonBack;
 
     @Override
@@ -31,10 +32,9 @@ public class AccountActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d("Account","firebaseAuth.getCurrentUser: " + firebaseAuth.getCurrentUser());
+                Log.d(LOG_TAG,"firebaseAuth.getCurrentUser: " + firebaseAuth.getCurrentUser());
 
                 if (firebaseAuth.getCurrentUser() == null){
                     removeOldUsersTokenFromDatabase(userIdOfLastUser);
@@ -60,18 +60,16 @@ public class AccountActivity extends AppCompatActivity {
                 finish();
             }
         });
-        button = findViewById(R.id.account_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonSignOut = findViewById(R.id.signOut_button);
+        buttonSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 auth.signOut();
-                button.setEnabled(false);
+                buttonSignOut.setEnabled(false);
                 textViewTop.setVisibility(View.INVISIBLE);
                 textViewEmail.setText("Du bist jetzt abgemeldet.");
             }
         });
-
-
     }
     private void removeOldUsersTokenFromDatabase(String oldUserId){
         final DatabaseReference firebaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");

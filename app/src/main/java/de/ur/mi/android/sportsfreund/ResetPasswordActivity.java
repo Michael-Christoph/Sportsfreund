@@ -26,8 +26,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private Button buttonReset;
     private Button buttonBack;
     private Button buttonInvisible;
-    ProgressBar progressBar;
-
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         buttonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

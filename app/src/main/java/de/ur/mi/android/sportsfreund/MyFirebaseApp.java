@@ -1,10 +1,9 @@
 package de.ur.mi.android.sportsfreund;
 
 import android.support.multidex.MultiDexApplication;
-
 import com.google.firebase.database.FirebaseDatabase;
 
-//MP: adds offline persistence even if app is destroyed.
+//adds offline persistence even if app is destroyed.
 public class MyFirebaseApp extends MultiDexApplication {
     @Override
     public void onCreate(){

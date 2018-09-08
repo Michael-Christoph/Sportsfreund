@@ -30,7 +30,7 @@
         android:text="@string/dummy"
         android:textSize="@dimen/text_large"
         android:textAlignment="center"
-        android:background="@color/colorAccent"
+        android:background="@color/lightGrey"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_tiny"
         android:layout_marginRight="@dimen/margin_big"

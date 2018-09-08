@@ -39,7 +39,7 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(new Intent(SignInActivity.this,MainActivity.class));
         }
 
-        //MP: View will be modified in the following lines.
+        //view will be modified in the following lines.
         setContentView(R.layout.activity_sign_up);
         textViewTop = findViewById(R.id.textview_top);
         textViewTop.setText(R.string.login_request);
@@ -51,7 +51,6 @@ public class SignInActivity extends AppCompatActivity {
         buttonSwitchToSignUp = findViewById(R.id.registration_button_bottom);
         buttonSwitchToSignUp.setText(R.string.button_link_to_signUp_text);
         progressBar = findViewById(R.id.register_progressbar);
-
 
         buttonResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,12 +70,11 @@ public class SignInActivity extends AppCompatActivity {
                 signInOrHandleErrors();
             }
         });
-
-
     }
     private void signInOrHandleErrors(){
         String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
+
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
             return;
@@ -101,9 +99,7 @@ public class SignInActivity extends AppCompatActivity {
                                 Toast.makeText(SignInActivity.this, getString(R.string.login_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            //if (!MyFirebaseMessagingService.mostRecentTokenSavedInDatabase){
-                                MyFirebaseMessagingService.sendTokenToDatabase(auth.getCurrentUser());
-                            //}
+                            MyFirebaseMessagingService.sendTokenToDatabase(auth.getCurrentUser());
                             finish();
                         }
                     }

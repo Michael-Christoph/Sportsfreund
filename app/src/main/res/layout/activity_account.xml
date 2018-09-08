@@ -9,16 +9,6 @@
     android:weightSum="5"
     android:orientation="vertical">
 
-    <!--
-    <de.ur.mi.android.sportsfreund.ProportionalImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_zeichnungalpha"
-        android:adjustViewBounds="true"
-        android:layout_weight="1"/>
-        -->
-
-
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -68,7 +58,7 @@
         android:baselineAligned="true">
 
         <Button
-        android:id="@+id/account_button"
+        android:id="@+id/signOut_button"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"

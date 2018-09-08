@@ -8,20 +8,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
-
 import com.google.firebase.database.Exclude;
-
 import java.util.ArrayList;
 
-//@IgnoreExtraProperties
 public class Game implements Parcelable{
 
-    //http://www.vogella.com/tutorials/AndroidParcelable/article.html#using-auto-value-to-generate-parcelable-implementations
+    //cf. http://www.vogella.com/tutorials/AndroidParcelable/article.html#using-auto-value-to-generate-parcelable-implementations
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Game createFromParcel(Parcel in) {
             return new Game(in);
         }
-
         public Game[] newArray(int size) {
             return new Game[size];
         }
@@ -32,16 +28,11 @@ public class Game implements Parcelable{
     private String gameDate;
     private double gameLat;
     private double gameLong;
-    //Firebase Realtime Database isn't able to parse non-primitive fields.
-    @Exclude
-    private Location gameLocation;
+    private ArrayList<String> participants = new ArrayList<>();
 
+    //signalizes Firebase/GSON that field can be ignored for game representation in database
     @Exclude
     private String key;
-
-
-
-    private ArrayList<String> participants = new ArrayList<>();
 
     // Default constructor required by Jackson/GSON for calls to
     // DataSnapshot.getValue(User.class)
@@ -56,18 +47,15 @@ public class Game implements Parcelable{
         this.gameTime = gameTime;
         this.gameLat = locLat;
         this.gameLong = locLong;
-
         participants.add(uid);
     }
 
-
-    public Float distanceToGame (Context context){
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && gpsIsEnabled ( context )){
+    public Float distanceToGame(Context context){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                gpsIsEnabled(context)){
             Location lastKnownLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-            /**gameLocation = NavigationController.getInstance(context).returnLastKnownLocation();
-             Log.d("Game","gameLocation lat ist: " + gameLocation.getLatitude() );**/
             if (lastKnownLocation != null){
-                gameLocation = new Location( "" );
+                Location gameLocation = new Location( "" );
                 gameLocation.setLatitude(this.gameLat);
                 gameLocation.setLongitude(this.gameLong);
                 float distance = lastKnownLocation.distanceTo(gameLocation);
@@ -75,15 +63,13 @@ public class Game implements Parcelable{
             } else {
                 return null;
             }
-
         } else {
             return null;
         }
-
     }
 
     private boolean gpsIsEnabled(Context context) {
-        boolean gpsEnabled= NavigationController.getInstance(context).gpsIsEnabled();
+        boolean gpsEnabled= NavigationController.getInstance(context).isGpsEnabled();
         return gpsEnabled;
     }
 
@@ -102,18 +88,10 @@ public class Game implements Parcelable{
     public double getGameLong(){
         return gameLong;
     }
-
-
     public ArrayList<String> getParticipants() {
         return participants;
     }
-    /*
-    //nur ein Platzhalter für Max' Methode
-    public double getProximity(int lastKnownLocation){
-        String firstLatDigits = gameLocation.substring(5,20);
-        return Double.parseDouble(firstLatDigits)-lastKnownLocation;
-    }
-    */
+
     public void addParticipant(String uid, Context context){
         if (participants.contains(uid)){
             Toast.makeText(context,R.string.participant_already_added,Toast.LENGTH_LONG).show();
@@ -145,7 +123,6 @@ public class Game implements Parcelable{
         this.gameLat = updatedGame.gameLat;
         this.gameLong = updatedGame.gameLong;
         this.participants = updatedGame.participants;
-        //this.key = updatedGame.key;
     }
 
     //http://www.vogella.com/tutorials/AndroidParcelable/article.html#using-auto-value-to-generate-parcelable-implementations
@@ -155,7 +132,6 @@ public class Game implements Parcelable{
         this.gameTime = in.readString();
         this.gameLat = in.readDouble();
         this.gameLong = in.readDouble();
-        //this.gameLocation = in.readParcelable(Location.class.getClassLoader());
         this.participants = in.readArrayList(ArrayList.class.getClassLoader());
         this.key = in.readString();
     }
@@ -170,7 +146,6 @@ public class Game implements Parcelable{
         parcel.writeString(this.gameName);
         parcel.writeString(this.gameDate);
         parcel.writeString(this.gameTime);
-        //parcel.writeParcelable(this.gameLocation,i);
         parcel.writeDouble(this.gameLat);
         parcel.writeDouble(this.gameLong);
         parcel.writeList(this.participants);

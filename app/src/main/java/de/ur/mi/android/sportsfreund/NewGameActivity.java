@@ -1,6 +1,5 @@
 package de.ur.mi.android.sportsfreund;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,7 +7,6 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.location.Location;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,46 +28,46 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
 
+//cf. https://developer.android.com/guide/topics/ui/controls/pickers
 public class NewGameActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String LOG_TAG = "NewGameActivity";
+    private static final int REQUEST_CODE = 1;
+    static String gameTime;
+    static String gameDate;
 
     private EditText inputGame;
     private static Button inputTime;
     private static Button inputDate;
     Button makeGameButton;
     Button mapButton;
-    final int REQUEST_CODE = 1;
-    public static final String KEY_LOCATION_LAT= "lKeyLat";
-    public static final String KEY_LOCATION_LONG = "lKeyLong";
 
     double locLat;
     double locLong;
 
-    static String gameTime;
-    static String gameDate;
-
-
-    private ItemAdapter_neu itemAdapter;
-
+    private ItemAdapter itemAdapter;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
-    private android.support.v7.app.ActionBar actionBar;
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
-        actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.games_nearby);
-        mAuth = FirebaseAuth.getInstance();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.new_game);
 
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null){
+                    currentUser = mAuth.getCurrentUser();
+                }
+            }
+        });
         currentUser = mAuth.getCurrentUser();
-        Log.d(LOG_TAG,"currentUser: " +currentUser);
+        Log.d(LOG_TAG,"currentUser: " + currentUser);
 
         inputGame = findViewById(R.id.input_name);
         inputDate = findViewById(R.id.input_date);
@@ -81,9 +79,8 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
         setupTimeButton();
         itemAdapter = MainActivity.getItemAdapter();
 
-        mDrawerLayout = findViewById(R.id.newGameDrawerLayout);
+        DrawerLayout mDrawerLayout = findViewById(R.id.newGameDrawerLayout);
         mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.open,R.string.close);
-
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
@@ -116,7 +113,6 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     @Override
     public void onStart(){
         super.onStart();
-
     }
 
     @Override
@@ -128,8 +124,9 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     }
 
     private void setupCreateGameButton() {
-            makeGameButton = findViewById(R.id.button_make_new_game);
-            makeGameButton.setEnabled( false );
+        makeGameButton = findViewById(R.id.button_make_new_game);
+        makeGameButton.setEnabled(false);
+        makeGameButton.setBackgroundColor(getResources().getColor(R.color.grey));
         makeGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,10 +138,12 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     private void makeNewGame() {
         if (inputGame.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_enterNameOfGame), Toast.LENGTH_SHORT).show();
+        } else if (gameDate == null || gameTime == null) {
+            Toast.makeText(getApplicationContext(),getString(R.string.toast_enterDateAndTime),Toast.LENGTH_SHORT).show();
         } else if (dateTimeIsHistory()) {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_enterFutureDateTime), Toast.LENGTH_SHORT).show();
         } else if (mAuth.getCurrentUser() == null) {
-            Intent i = new Intent(this, SignUpActivity.class);
+            Intent i = new Intent(this, SignInActivity.class);
             startActivity(i);
         } else {
             String gameName = inputGame.getText().toString();
@@ -159,14 +158,14 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
 
     //cf. method gameIsAlreadyOver in ItemAdapter class
     private Boolean dateTimeIsHistory(){
-        String currentDate = SportsfreundHelper.getCurrentDateAsString();
+        String currentDate = SFHelper.getCurrentDateAsString();
         Log.d(LOG_TAG,"currentDate: " + currentDate);
         if (gameDate.compareTo(currentDate) < 0){
             return true;
         } else if (gameDate.compareTo(currentDate) > 0){
             return false;
         } else {
-            String currentTimeString = SportsfreundHelper.getCurrentTimeAsString();
+            String currentTimeString = SFHelper.getCurrentTimeAsString();
             Log.d(LOG_TAG,"currentTimeString: " + currentTimeString);
 
             if (gameTime.compareTo(currentTimeString) <= 0){
@@ -175,7 +174,6 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
                 return false;
             }
         }
-
     }
 
     private void setupMapButton(){
@@ -196,10 +194,11 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==REQUEST_CODE){
             if (resultCode== Activity.RESULT_OK){
-                locLat = data.getDoubleExtra(KEY_LOCATION_LAT, 1111111111);
-                locLong = data.getDoubleExtra(KEY_LOCATION_LONG, 11111111);
+                locLat = data.getDoubleExtra(GlobalVariables.KEY_LOCATION_LAT, 1111111111);
+                locLong = data.getDoubleExtra(GlobalVariables.KEY_LOCATION_LONG, 11111111);
 
-                makeGameButton.setEnabled( true );
+                makeGameButton.setEnabled(true);
+                makeGameButton.setBackgroundColor(getResources().getColor(R.color.purple));
                 mapButton.setText(getString(R.string.newGame_locationIsEntered));
                 if (locLat != 0){
                     Log.d(LOG_TAG,"LocLat: " + locLat);
@@ -221,26 +220,22 @@ public class NewGameActivity extends AppCompatActivity implements NavigationView
                 startActivity(new Intent(this,SignUpActivity.class));
             }
         }
-
-        if(id == R.id.games)  {
+        if(id == R.id.games_nearby)  {
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
         }
-
         return false;
     }
 
     public void showTimePickerDialog(View view) {
         DialogFragment newFragment = new TimePickerFragment();
         FragmentManager fragMan = getFragmentManager();
-
         newFragment.show(fragMan, "timePicker");
     }
 
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         FragmentManager fragMan = getFragmentManager();
-
         newFragment.show(fragMan, "datePicker");
     }
 

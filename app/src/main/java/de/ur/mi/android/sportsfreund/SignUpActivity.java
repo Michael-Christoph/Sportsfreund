@@ -25,25 +25,20 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button buttonRegister;
-    private Button buttonForgotPassword;
-    private Button buttonSwitchToLogin;
     private ProgressBar progressBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
         auth = FirebaseAuth.getInstance();
 
-        editTextEmail = (EditText) findViewById(R.id.editText_mail);
-        editTextPassword = (EditText) findViewById(R.id.editText_password);
-        buttonRegister = (Button) findViewById(R.id.registration_button_main);
-        buttonForgotPassword = findViewById(R.id.registration_button_beneath_main);
-        buttonSwitchToLogin = findViewById(R.id.registration_button_bottom);
+        editTextEmail = findViewById(R.id.editText_mail);
+        editTextPassword = (findViewById(R.id.editText_password));
+        Button buttonRegister = findViewById(R.id.registration_button_main);
+        Button buttonForgotPassword = findViewById(R.id.registration_button_beneath_main);
+        Button buttonSwitchToLogin = findViewById(R.id.registration_button_bottom);
         progressBar = findViewById(R.id.register_progressbar);
 
         buttonForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -80,32 +75,25 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.VISIBLE);
 
-                //var user = auth.createUserWithEmailAndPassword(email,password);
-
                 auth.createUserWithEmailAndPassword(email,password).
                         addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 Log.d(LOG_TAG,"createUserWithEmail:onComplete:" + task.isSuccessful());
-                                Toast.makeText(SignUpActivity.this,
-                                        getString(R.string.signUp_successful),
-                                        Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                                 if (!task.isSuccessful()){
+                                    Log.d(LOG_TAG,"exception: " + task.getException());
                                     Toast.makeText(SignUpActivity.this,
-                                            "Die Registrierung ist fehlgeschlagen" + task.getException(),
-                                            Toast.LENGTH_SHORT).show();
+                                            getString(R.string.sign_out_failed),
+                                            Toast.LENGTH_LONG).show();
                                 } else {
+                                    Toast.makeText(SignUpActivity.this,getString(R.string.signUp_successful),Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                             }
                         });
-
             }
         });
-
-
-
     }
     @Override
     protected void onResume() {

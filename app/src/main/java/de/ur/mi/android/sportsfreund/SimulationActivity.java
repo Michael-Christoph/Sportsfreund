@@ -13,14 +13,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SimulationActivity extends AppCompatActivity {
 
-    TextView textView1,textView2;
-    Button btn1,btn2,btn3,btn4,btn5;
-    ItemAdapter_neu itemAdapter;
-
-    Game testGame;
-
     public static final String LOG_TAG = "SimulationActivity";
 
+    TextView textView1,textView2;
+    Button btn1,btn2,btn3,btn4,btn5;
+    ItemAdapter itemAdapter;
+
+    Game testGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
