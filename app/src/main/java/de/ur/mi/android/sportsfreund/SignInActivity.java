@@ -105,4 +105,12 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        progressBar.setVisibility(View.GONE);
+        if (auth.getCurrentUser() != null){
+            finish();
+        }
+    }
 }
