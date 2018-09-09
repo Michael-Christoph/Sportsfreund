@@ -54,9 +54,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } else {
             mostRecentTokenSavedInDatabase = false;
             Log.d(LOG_TAG,"user is null");
-            Intent switchToSignIn = new Intent(getApplicationContext(),SignInActivity.class);
-            switchToSignIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(switchToSignIn);
+            Intent switchToSignUp = new Intent(getApplicationContext(),SignUpActivity.class);
+            switchToSignUp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(switchToSignUp);
         }
     }
 
@@ -71,6 +71,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             Log.d("FirebaseMessaging", task.getException().toString());
                             return;
                         }
+                        mostRecentTokenSavedInDatabase = true;
                         String token = task.getResult().getToken();
                         Log.d("FirebaseMessaging", "Token: " + token);
                         firebaseUsersRef.child(userId).setValue(token);

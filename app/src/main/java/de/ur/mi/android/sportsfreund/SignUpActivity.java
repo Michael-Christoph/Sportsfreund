@@ -88,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(SignUpActivity.this,getString(R.string.signUp_successful),Toast.LENGTH_SHORT).show();
+                                    MyFirebaseMessagingService.sendTokenToDatabase(auth.getCurrentUser());
                                     finish();
                                 }
                             }
